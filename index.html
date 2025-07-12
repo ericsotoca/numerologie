@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Numérologie Stratégique Approfondie</title>
+    <title>Numérologie Stratégique Complète</title>
     
-    <!-- Polices de caractères depuis Google Fonts -->
+    <!-- Polices de caractères -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -13,13 +13,25 @@
     <!-- === SECTION CSS === -->
     <style>
         :root {
-            --primary-color: #3a0ca3; /* Violet plus royal */
-            --secondary-color: #7209b7; /* Magenta-violet */
-            --background-color: #f5f3f4; /* Gris très clair */
-            --text-color: #333;
+            --primary-color: #3a0ca3;
+            --secondary-color: #7209b7;
+            --background-color: #f5f3f4;
+            --text-color: #212529;
             --card-bg: #ffffff;
             --border-radius: 12px;
             --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --summary-border: #4361ee;
+        }
+
+        /* === Styles pour le Mode Sombre === */
+        body.dark-mode {
+            --primary-color: #9d4edd;
+            --secondary-color: #c77dff;
+            --background-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --box-shadow: 0 6px 20px rgba(255, 255, 255, 0.05);
+            --summary-border: #80ffdb;
         }
 
         body {
@@ -32,53 +44,81 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
             max-width: 800px;
             width: 100%;
-            background: transparent;
         }
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             color: var(--primary-color);
+            position: relative;
         }
 
         header h1 {
-            margin: 0;
             font-family: 'Lora', serif;
             font-size: 2.8em;
             font-weight: 600;
         }
+
+        /* === Styles pour l'interrupteur de thème === */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 50px;
+        }
+        .theme-switch input { display: none; }
+        .slider {
+            background-color: #ccc;
+            bottom: 0; left: 0; right: 0; top: 0;
+            position: absolute;
+            cursor: pointer;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            background-color: white;
+            bottom: 4px; left: 4px;
+            content: "";
+            height: 16px; width: 16px;
+            position: absolute;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--secondary-color); }
+        input:checked + .slider:before { transform: translateX(26px); }
 
         main {
             background: var(--card-bg);
             padding: 30px 40px;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
+            transition: background-color 0.3s;
         }
 
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--primary-color); }
         .input-group input {
-            width: 100%;
-            padding: 12px;
+            width: 100%; padding: 12px;
             border: 1px solid #ccc;
             border-radius: var(--border-radius);
             font-size: 1em;
             font-family: 'Poppins', sans-serif;
             box-sizing: border-box;
+            background-color: var(--card-bg);
+            color: var(--text-color);
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         .input-group input:focus {
@@ -88,93 +128,102 @@
         }
 
         button {
-            width: 100%;
-            padding: 15px;
+            width: 100%; padding: 15px;
             background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-            color: white;
-            border: none;
+            color: white; border: none;
             border-radius: var(--border-radius);
-            font-size: 1.2em;
-            font-weight: 600;
-            cursor: pointer;
+            font-size: 1.2em; font-weight: 600; cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-
         button:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(58, 12, 163, 0.4);
         }
 
-        #results-container {
+        #results-wrapper {
             margin-top: 40px;
-            opacity: 0;
-            transform: translateY(20px);
+            opacity: 0; transform: translateY(20px);
             transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
         }
-
-        #results-container:not(.hidden) {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .result-card {
-            background-color: #fdfdff;
-            padding: 25px;
-            margin-bottom: 25px;
+        #results-wrapper:not(.hidden) { opacity: 1; transform: translateY(0); }
+        
+        .result-card, .summary-card {
+            background-color: var(--card-bg);
+            padding: 25px; margin-bottom: 25px;
             border-radius: var(--border-radius);
             border-left: 6px solid var(--secondary-color);
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .summary-card {
+            border-left-color: var(--summary-border);
+            background-color: color-mix(in srgb, var(--card-bg) 95%, var(--summary-border) 5%);
         }
 
-        .result-card h2 {
-            margin-top: 0;
-            margin-bottom: 15px;
+        .result-card h2, .summary-card h2 {
+            margin-top: 0; margin-bottom: 15px;
             color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            font-family: 'Lora', serif;
-            font-size: 1.8em;
+            display: flex; align-items: center;
+            font-family: 'Lora', serif; font-size: 1.8em;
         }
-
         .result-card .number-circle {
-            flex-shrink: 0;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 50px;
-            height: 50px;
+            flex-shrink: 0; display: inline-flex;
+            justify-content: center; align-items: center;
+            width: 50px; height: 50px;
             background-color: var(--secondary-color);
-            color: white;
-            border-radius: 50%;
-            font-size: 1.6em;
-            font-weight: 600;
+            color: white; border-radius: 50%;
+            font-size: 1.6em; font-weight: 600;
             margin-right: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
-        .result-card p {
-            line-height: 1.7;
-            margin-bottom: 10px;
+        .result-card p, .summary-card p { line-height: 1.7; margin-bottom: 10px; }
+        .result-card .description, .summary-card .description {
+            font-style: italic; color: #555;
+            margin-bottom: 15px; font-family: 'Lora', serif;
         }
-        .result-card p:last-child {
-            margin-bottom: 0;
+        body.dark-mode .result-card .description, body.dark-mode .summary-card .description { color: #aaa; }
+        
+        /* === Styles pour les détails du calcul === */
+        details { margin-top: 20px; }
+        summary {
+            cursor: pointer; font-weight: 600;
+            color: var(--primary-color);
+            display: inline-block; padding: 5px 0;
         }
-        .result-card .description {
-            font-style: italic;
-            color: #555;
-            margin-bottom: 15px;
-            font-family: 'Lora', serif;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 40px;
+        .calculation-details {
             font-size: 0.9em;
-            color: #777;
+            color: #444;
+            background: color-mix(in srgb, var(--background-color) 80%, #000 20%);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-top: 8px;
+            line-height: 1.6;
+            border: 1px solid color-mix(in srgb, var(--background-color) 50%, #000 50%);
+        }
+        body.dark-mode .calculation-details {
+            color: #ddd;
+            background: #2c2c2c;
+            border-color: #444;
+        }
+
+        #print-btn { margin-top: 20px; background: #6c757d; }
+        #print-btn:hover { background: #5a6268; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); }
+
+        .hidden { display: none; }
+        footer { text-align: center; margin-top: 40px; font-size: 0.9em; color: #777; }
+        body.dark-mode footer { color: #888; }
+        
+        /* === Styles pour l'impression === */
+        @media print {
+            body { padding: 0; margin: 20px; background-color: #fff; color: #000; }
+            header, main > form, footer, #print-btn, .theme-switch-wrapper { display: none; }
+            main, .container { box-shadow: none; padding: 0; }
+            .result-card, .summary-card {
+                page-break-inside: avoid;
+                box-shadow: none; border: 1px solid #ddd;
+                background-color: #fff !important;
+            }
+            details { display: none; } /* On cache les détails pour un rapport plus propre */
         }
     </style>
 </head>
@@ -183,7 +232,15 @@
     <div class="container">
         <header>
             <h1>🔮 Numérologie Stratégique</h1>
-            <p>Découvrez les énergies fondamentales qui façonnent votre vie et votre personnalité.</p>
+            <p>Découvrez les énergies qui façonnent votre vie.</p>
+            <div class="theme-switch-wrapper">
+                <span>☀️</span>
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span>🌙</span>
+            </div>
         </header>
 
         <main>
@@ -192,22 +249,22 @@
                     <label for="full-name">Noms et Prénoms complets (de naissance)</label>
                     <input type="text" id="full-name" placeholder="Ex: Marie Anne Claire Dubois" required>
                 </div>
-
                 <div class="input-group">
                     <label for="birth-date">Date de naissance</label>
                     <input type="date" id="birth-date" required>
                 </div>
-                
-                <button type="submit">Calculer mon Thème Numérologique</button>
+                <button type="submit">Calculer mon Thème Complet</button>
             </form>
 
-            <div id="results-container" class="hidden">
-                <!-- Les résultats détaillés seront injectés ici par JavaScript -->
+            <div id="results-wrapper" class="hidden">
+                <div id="summary-container"></div>
+                <div id="results-container"></div>
+                <button id="print-btn" class="hidden">🖨️ Imprimer / Sauvegarder en PDF</button>
             </div>
         </main>
         
         <footer>
-            <p>Cette application est un outil de découverte de soi et de divertissement. Elle ne remplace pas un conseil professionnel.</p>
+            <p>Application créée pour la découverte de soi. Ne remplace pas un conseil professionnel.</p>
         </footer>
     </div>
 
@@ -215,165 +272,170 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('numerology-form');
+            const resultsWrapper = document.getElementById('results-wrapper');
+            const summaryContainer = document.getElementById('summary-container');
             const resultsContainer = document.getElementById('results-container');
+            const printBtn = document.getElementById('print-btn');
+            const themeToggle = document.getElementById('theme-toggle');
 
-            // Table de correspondance des lettres (Pythagore)
-            const letterValues = {
-                'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8, 'I': 9,
-                'J': 1, 'K': 2, 'L': 3, 'M': 4, 'N': 5, 'O': 6, 'P': 7, 'Q': 8, 'R': 9,
-                'S': 1, 'T': 2, 'U': 3, 'V': 4, 'W': 5, 'X': 6, 'Y': 7, 'Z': 8
-            };
+            // --- Logique du Thème Sombre ---
+            themeToggle.addEventListener('change', () => {
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            });
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.checked = true;
+            }
 
+            const letterValues = { 'A':1,'J':1,'S':1, 'B':2,'K':2,'T':2, 'C':3,'L':3,'U':3, 'D':4,'M':4,'V':4, 'E':5,'N':5,'W':5, 'F':6,'O':6,'X':6, 'G':7,'P':7,'Y':7, 'H':8,'Q':8,'Z':8, 'I':9,'R':9 };
             const vowels = ['A', 'E', 'I', 'O', 'U', 'Y'];
-
-            // === INTERPRÉTATIONS DÉTAILLÉES ===
-            const interpretations = {
-                cheminDeVie: {
-                    1: "<strong>Le Leader :</strong> Votre mission est d'apprendre l'indépendance, l'innovation et le leadership. Vous êtes ici pour ouvrir des voies, diriger par l'exemple et développer votre confiance en vous. Votre plus grand défi est de croire en vos propres idées sans dépendre de l'approbation des autres.",
-                    2: "<strong>Le Diplomate :</strong> Votre chemin est celui de la coopération, de la diplomatie et de l'harmonie. Vous êtes ici pour apprendre à travailler en équipe, à être sensible aux besoins des autres et à créer des liens. Le défi est de trouver votre propre voix et de ne pas vous effacer au profit des autres.",
-                    3: "<strong>Le Communicant :</strong> Vous êtes sur un chemin de créativité, d'expression et de joie de vivre. Votre mission est de communiquer, d'inspirer et d'apporter de l'optimisme au monde. Le défi est de ne pas disperser votre énergie et de rester concentré sur vos projets créatifs jusqu'à leur aboutissement.",
-                    4: "<strong>Le Bâtisseur :</strong> Votre mission est de construire, d'organiser et d'apporter de la stabilité. Vous êtes ici pour créer des fondations solides, que ce soit dans votre carrière, votre famille ou vos projets. Le défi est d'accepter la flexibilité et de ne pas devenir trop rigide dans vos structures.",
-                    5: "<strong>L'Aventurier :</strong> Votre chemin est celui du changement, de la liberté et de l'aventure. Vous êtes ici pour expérimenter la vie sous toutes ses facettes et apprendre l'adaptabilité. Le défi est de trouver un équilibre entre liberté et discipline pour ne pas vous perdre dans une quête de sensations sans fin.",
-                    6: "<strong>Le Responsable :</strong> Votre mission est liée à l'amour, la responsabilité et le service aux autres, en particulier la famille et la communauté. Vous êtes ici pour apprendre à prendre soin, à harmoniser et à conseiller. Le défi est de ne pas tomber dans le sacrifice et de savoir prendre soin de vous-même.",
-                    7: "<strong>Le Sage :</strong> Votre chemin est une quête de connaissance, de vérité et de spiritualité. Vous êtes ici pour analyser, comprendre les mystères de la vie et partager votre sagesse. Le défi est de ne pas vous isoler du monde et d'apprendre à faire confiance à votre intuition autant qu'à votre intellect.",
-                    8: "<strong>Le Puissant :</strong> Votre mission est d'apprendre la maîtrise du monde matériel, le pouvoir et l'abondance. Vous êtes ici pour développer votre ambition, gérer des projets d'envergure et trouver un équilibre entre le matériel et le spirituel. Le défi est d'utiliser votre pouvoir de manière juste et éthique.",
-                    9: "<strong>L'Humaniste :</strong> Votre chemin est celui de l'altruisme, de la compassion et de la vision universelle. Vous êtes ici pour servir l'humanité, inspirer les autres par votre sagesse et apprendre le lâcher-prise. Le défi est d'accepter les imperfections du monde et de vivre dans le présent.",
-                    11: "<strong>L'Inspiré (Maître Nombre) :</strong> C'est le chemin du 2 à une haute vibration. Votre mission est d'être un canal d'inspiration et de révélation pour les autres. Vous avez une intuition puissante et une vision idéaliste. Le défi est de gérer votre hypersensibilité et d'ancrer vos visions dans la réalité concrète.",
-                    22: "<strong>Le Grand Bâtisseur (Maître Nombre) :</strong> C'est le chemin du 4 à une très haute vibration. Votre mission est de transformer des rêves ambitieux en réalisations concrètes qui bénéficient à un grand nombre. Vous êtes un 'maître constructeur'. Le défi est de gérer l'énorme pression et de ne pas douter de votre capacité à réaliser l'impossible.",
-                    33: "<strong>Le Guide Spirituel (Maître Nombre) :</strong> Extrêmement rare, c'est le chemin du 6 à sa plus haute expression. Votre mission est le service désintéressé et la compassion universelle. Vous êtes un maître de la guérison et de l'enseignement. Le défi est de porter ce lourd fardeau d'amour inconditionnel sans vous épuiser."
-                },
-                expression: {
-                    1: "<strong>Le Pionnier :</strong> Vos talents naturels résident dans votre capacité à initier, diriger et être original. Vous êtes fait pour être indépendant et prendre des décisions audacieuses. Votre potentiel s'exprime pleinement lorsque vous êtes aux commandes.",
-                    2: "<strong>Le Partenaire :</strong> Vous possédez des dons pour la collaboration, la médiation et la création d'harmonie. Vous savez instinctivement comment rassembler les gens. Votre potentiel s'épanouit dans les associations et les rôles de soutien.",
-                    3: "<strong>L'Artiste Créatif :</strong> Votre potentiel s'exprime à travers la communication, la créativité et l'interaction sociale. Vous avez un don pour les mots, l'art et la mise en scène. Vous êtes né pour inspirer la joie.",
-                    4: "<strong>L'Organisateur :</strong> Vous avez un talent inné pour l'organisation, la planification et le travail méticuleux. Vous êtes fiable, pragmatique et capable de construire des systèmes durables. Votre potentiel est dans la concrétisation.",
-                    5: "<strong>Le Communicateur Charismatique :</strong> Vos talents sont la polyvalence, l'adaptabilité et la capacité à communiquer avec aisance. Vous savez vendre des idées et vous adapter au changement. Votre potentiel est dans le mouvement et la variété.",
-                    6: "<strong>Le Conseiller Protecteur :</strong> Vous avez un don pour le conseil, l'enseignement et la prise en charge des autres. Vous créez l'harmonie et la beauté autour de vous. Votre potentiel est dans le service et la responsabilité.",
-                    7: "<strong>Le Chercheur de Vérité :</strong> Vos talents sont l'analyse, la recherche et l'intuition. Vous êtes un spécialiste qui aime aller au fond des choses. Votre potentiel s'exprime dans les domaines de la connaissance et de la spiritualité.",
-                    8: "<strong>Le Manager Ambitieux :</strong> Vous possédez un potentiel exceptionnel pour les affaires, la finance et le management. Vous avez une vision stratégique et une grande force de travail. Votre don est de manifester la réussite matérielle.",
-                    9: "<strong>Le Grand Humaniste :</strong> Vos talents sont la compassion, la créativité et une vision large du monde. Vous êtes capable d'inspirer des groupes entiers. Votre potentiel est dans les projets à portée universelle et artistique.",
-                    11: "<strong>Le Visionnaire Intuitif :</strong> Vous avez le potentiel d'un leader charismatique et inspirant. Vos idées sont avant-gardistes et votre intuition est votre meilleur guide. Vous êtes destiné à éclairer les autres.",
-                    22: "<strong>Le Maître Bâtisseur :</strong> Vous avez le potentiel de réaliser des projets d'une envergure exceptionnelle. Vous alliez vision et pragmatisme pour créer des œuvres durables et utiles à la société. Votre potentiel est quasi illimité.",
-                    33: "<strong>Le Maître Enseignant :</strong> Votre potentiel est celui d'un guide spirituel et d'un guérisseur. Vous exprimez un amour et une compassion profonds qui inspirent et élèvent les autres. Votre don est celui du sacrifice altruiste."
-                },
-                ame: {
-                    1: "<strong>Désir d'Indépendance :</strong> Au plus profond de vous, vous aspirez à être le numéro un, à diriger votre propre vie et à être reconnu pour vos réussites individuelles. Vous détestez recevoir des ordres et avez besoin d'autonomie.",
-                    2: "<strong>Désir d'Harmonie :</strong> Votre âme recherche l'amour, la paix et l'union. Vous êtes profondément heureux lorsque vous êtes en partenariat, que ce soit en amitié, en amour ou au travail. Le conflit vous est insupportable.",
-                    3: "<strong>Désir d'Expression :</strong> Vous avez un besoin vital de créer, de communiquer et d'exprimer votre joie de vivre. L'art, l'écriture, la musique ou simplement le fait d'être sociable sont essentiels à votre bonheur.",
-                    4: "<strong>Désir de Stabilité :</strong> Votre motivation la plus profonde est la quête de sécurité et de structure. Vous avez besoin d'un cadre, de règles et d'un plan solide pour vous sentir en paix. Le désordre et l'incertitude vous angoissent.",
-                    5: "<strong>Désir de Liberté :</strong> Votre âme a soif de changement, de voyage, d'aventure et de nouvelles expériences. Vous avez besoin de vous sentir libre de toute contrainte et d'explorer le monde. La routine vous étouffe.",
-                    6: "<strong>Désir de Service :</strong> Vous êtes animé par un profond besoin de prendre soin des autres, de créer un foyer harmonieux et de vous sentir utile à votre communauté. L'amour et la responsabilité sont vos moteurs.",
-                    7: "<strong>Désir de Connaissance :</strong> Votre âme est celle d'un chercheur. Vous avez un besoin insatiable de comprendre, d'analyser et de percer les mystères de la vie. La solitude et la réflexion vous ressourcent.",
-                    8: "<strong>Désir de Maîtrise :</strong> Au fond de vous, vous aspirez au succès, à la reconnaissance et à la maîtrise du monde matériel. Vous êtes motivé par les défis et le désir d'atteindre des postes de pouvoir et d'influence.",
-                    9: "<strong>Désir d'Universalité :</strong> Votre âme est tournée vers l'humanité. Vous êtes motivé par de grandes causes, le désir d'aider les autres et de contribuer à un monde meilleur. Vous avez une vision large et généreuse.",
-                    11: "<strong>Désir de Révélation :</strong> Votre âme aspire à une connexion spirituelle intense et à l'inspiration. Vous êtes motivé par des idéaux élevés et le désir d'apporter une lumière nouvelle au monde. Vous cherchez la vérité au-delà des apparences.",
-                    22: "<strong>Désir de Bâtir pour l'Humanité :</strong> Votre âme a des ambitions grandioses. Vous ne désirez pas seulement construire, mais construire quelque chose de monumental qui laissera une trace durable et servira le plus grand nombre.",
-                    33: "<strong>Désir d'Amour Inconditionnel :</strong> Votre désir le plus profond est de guérir le monde par la compassion et le service total. Vous êtes motivé par un amour universel qui transcende les liens personnels."
-                },
-                personnalite: {
-                    1: "<strong>L'Image du Chef :</strong> Vous apparaissez aux autres comme une personne confiante, déterminée et indépendante. On vous perçoit comme un leader naturel, parfois un peu autoritaire mais toujours prêt à prendre les devants.",
-                    2: "<strong>L'Image du Diplomate :</strong> Les autres vous voient comme quelqu'un de charmant, coopératif et attentionné. Vous projetez une image de douceur et de tact, et l'on vient naturellement vous demander conseil ou médiation.",
-                    3: "<strong>L'Image de l'Artiste Sociable :</strong> On vous perçoit comme quelqu'un de pétillant, d'optimiste et de très communicatif. Vous avez une aura de créativité et de joie de vivre qui attire les autres à vous.",
-                    4: "<strong>L'Image du Pilier Fiable :</strong> Vous projetez une image de sérieux, de stabilité et de fiabilité. Les autres vous voient comme quelqu'un de travailleur, d'organisé et sur qui l'on peut toujours compter.",
-                    5: "<strong>L'Image de l'Aventurier Charismatique :</strong> On vous perçoit comme une personne magnétique, adaptable et pleine d'entrain. Vous donnez l'impression de ne jamais avoir peur du changement et de toujours être prêt pour une nouvelle aventure.",
-                    6: "<strong>L'Image du Parent Universel :</strong> Les autres vous voient comme une personne chaleureuse, responsable et bienveillante. Vous projetez une aura de protection et de conseil, et l'on se sent en sécurité à vos côtés.",
-                    7: "<strong>L'Image du Sage Mystérieux :</strong> On vous perçoit comme quelqu'un d'intelligent, de réservé et d'un peu énigmatique. Vous donnez l'impression d'observer et d'analyser le monde avec une grande profondeur.",
-                    8: "<strong>L'Image de la Puissance :</strong> Vous projetez une image de force, d'ambition et de contrôle. Les autres vous voient comme quelqu'un de compétent, de puissant et destiné au succès matériel.",
-                    9: "<strong>L'Image de l'Humaniste Sage :</strong> On vous perçoit comme une personne tolérante, généreuse et charismatique. Vous dégagez une sagesse et une ouverture d'esprit qui inspirent le respect et l'admiration.",
-                    11: "<strong>L'Image de l'Intuitif Inspiré :</strong> Les autres vous voient comme quelqu'un d'électrique, d'intuitif et de visionnaire. Vous pouvez sembler un peu nerveux ou intense, mais votre perspicacité est évidente.",
-                    22: "<strong>L'Image du Bâtisseur de Confiance :</strong> Vous projetez une image d'une compétence et d'une fiabilité exceptionnelles. On vous perçoit comme quelqu'un capable de gérer de grands projets avec une aisance déconcertante.",
-                    33: "<strong>L'Image du Guide Bienveillant :</strong> On vous perçoit comme une source d'amour et de compassion. Vous dégagez une énergie de guérison et de sagesse profonde qui touche les autres au cœur."
-                },
-                nombreActif: {
-                    1: "<strong>Action Directe :</strong> Votre prénom vous pousse à agir de manière directe, indépendante et décisive. Quand une idée vous vient, vous avez tendance à la mettre en œuvre immédiatement, sans attendre les autres.",
-                    2: "<strong>Action Collaborative :</strong> Vous agissez de préférence en collaboration. Avant de vous lancer, vous cherchez à obtenir le soutien ou l'avis des autres. Votre force réside dans l'action de groupe.",
-                    3: "<strong>Action Créative :</strong> Votre manière d'agir est joyeuse, créative et expressive. Vous mettez de l'enthousiasme dans vos actions et vous aimez trouver des solutions originales et communiquer sur vos projets.",
-                    4: "<strong>Action Méthodique :</strong> Vous agissez de façon planifiée, organisée et persévérante. Vous préférez avancer pas à pas, en vous assurant que chaque étape est solide avant de passer à la suivante.",
-                    5: "<strong>Action Adaptable :</strong> Vous agissez de manière rapide, flexible et opportuniste. Vous êtes capable de changer de direction rapidement et de saisir les opportunités au vol. La routine dans l'action vous ennuie.",
-                    6: "<strong>Action Responsable :</strong> Vos actions sont motivées par le sens des responsabilités et le désir d'aider. Vous agissez souvent pour le bien-être des autres, en prenant en compte l'impact de vos décisions sur votre entourage.",
-                    7: "<strong>Action Réfléchie :</strong> Vous n'agissez pas sur un coup de tête. Vous avez besoin d'analyser la situation, de rechercher des informations et de comprendre le 'pourquoi' avant de vous engager. Votre action est stratégique.",
-                    8: "<strong>Action Ambitieuse :</strong> Votre mode d'action est puissant, efficace et orienté vers un objectif. Vous agissez avec ambition et autorité, en visant des résultats concrets et significatifs.",
-                    9: "<strong>Action Altruiste :</strong> Vous agissez souvent pour une cause plus grande que vous. Vos actions sont empreintes d'idéalisme et d'une vision à long terme. Vous êtes capable de motiver les autres à agir avec vous.",
-                    11: "<strong>Action Intuitive :</strong> Vous agissez en suivant votre puissante intuition. Vous 'sentez' ce qu'il faut faire, même si ce n'est pas toujours logique. Vos actions sont souvent inspirées et peuvent surprendre votre entourage.",
-                    22: "<strong>Action à Grande Échelle :</strong> Votre manière d'agir est pragmatique mais vise très haut. Vous mettez en œuvre des projets ambitieux avec une efficacité redoutable, en transformant des visions en réalité tangible.",
-                    33: "<strong>Action Compassionnelle :</strong> Vous agissez mû par un désir de guérir et de servir. Chacune de vos actions vise à apporter du réconfort et de l'aide, souvent au détriment de vos propres intérêts."
-                }
-            };
             
-            form.addEventListener('submit', (e) => {
+            // --- Interprétations (les mêmes que la version précédente, très complètes) ---
+            const interpretations = {
+                cheminDeVie: { 1: "<strong>Le Leader :</strong> Votre mission est d'apprendre l'indépendance, l'innovation et le leadership. Vous êtes ici pour ouvrir des voies, diriger par l'exemple et développer votre confiance en vous. Votre plus grand défi est de croire en vos propres idées sans dépendre de l'approbation des autres.", 2: "<strong>Le Diplomate :</strong> Votre chemin est celui de la coopération, de la diplomatie et de l'harmonie. Vous êtes ici pour apprendre à travailler en équipe, à être sensible aux besoins des autres et à créer des liens. Le défi est de trouver votre propre voix et de ne pas vous effacer au profit des autres.", 3: "<strong>Le Communicant :</strong> Vous êtes sur un chemin de créativité, d'expression et de joie de vivre. Votre mission est de communiquer, d'inspirer et d'apporter de l'optimisme au monde. Le défi est de ne pas disperser votre énergie et de rester concentré sur vos projets créatifs jusqu'à leur aboutissement.", 4: "<strong>Le Bâtisseur :</strong> Votre mission est de construire, d'organiser et d'apporter de la stabilité. Vous êtes ici pour créer des fondations solides, que ce soit dans votre carrière, votre famille ou vos projets. Le défi est d'accepter la flexibilité et de ne pas devenir trop rigide dans vos structures.", 5: "<strong>L'Aventurier :</strong> Votre chemin est celui du changement, de la liberté et de l'aventure. Vous êtes ici pour expérimenter la vie sous toutes ses facettes et apprendre l'adaptabilité. Le défi est de trouver un équilibre entre liberté et discipline pour ne pas vous perdre dans une quête de sensations sans fin.", 6: "<strong>Le Responsable :</strong> Votre mission est liée à l'amour, la responsabilité et le service aux autres, en particulier la famille et la communauté. Vous êtes ici pour apprendre à prendre soin, à harmoniser et à conseiller. Le défi est de ne pas tomber dans le sacrifice et de savoir prendre soin de vous-même.", 7: "<strong>Le Sage :</strong> Votre chemin est une quête de connaissance, de vérité et de spiritualité. Vous êtes ici pour analyser, comprendre les mystères de la vie et partager votre sagesse. Le défi est de ne pas vous isoler du monde et d'apprendre à faire confiance à votre intuition autant qu'à votre intellect.", 8: "<strong>Le Puissant :</strong> Votre mission est d'apprendre la maîtrise du monde matériel, le pouvoir et l'abondance. Vous êtes ici pour développer votre ambition, gérer des projets d'envergure et trouver un équilibre entre le matériel et le spirituel. Le défi est d'utiliser votre pouvoir de manière juste et éthique.", 9: "<strong>L'Humaniste :</strong> Votre chemin est celui de l'altruisme, de la compassion et de la vision universelle. Vous êtes ici pour servir l'humanité, inspirer les autres par votre sagesse et apprendre le lâcher-prise. Le défi est d'accepter les imperfections du monde et de vivre dans le présent.", 11: "<strong>L'Inspiré (Maître Nombre) :</strong> C'est le chemin du 2 à une haute vibration. Votre mission est d'être un canal d'inspiration et de révélation pour les autres. Vous avez une intuition puissante et une vision idéaliste. Le défi est de gérer votre hypersensibilité et d'ancrer vos visions dans la réalité concrète.", 22: "<strong>Le Grand Bâtisseur (Maître Nombre) :</strong> C'est le chemin du 4 à une très haute vibration. Votre mission est de transformer des rêves ambitieux en réalisations concrètes qui bénéficient à un grand nombre. Vous êtes un 'maître constructeur'. Le défi est de gérer l'énorme pression et de ne pas douter de votre capacité à réaliser l'impossible.", 33: "<strong>Le Guide Spirituel (Maître Nombre) :</strong> Extrêmement rare, c'est le chemin du 6 à sa plus haute expression. Votre mission est le service désintéressé et la compassion universelle. Vous êtes un maître de la guérison et de l'enseignement. Le défi est de porter ce lourd fardeau d'amour inconditionnel sans vous épuiser." },
+                expression: { 1: "<strong>Le Pionnier :</strong> Vos talents naturels résident dans votre capacité à initier, diriger et être original. Vous êtes fait pour être indépendant et prendre des décisions audacieuses. Votre potentiel s'exprime pleinement lorsque vous êtes aux commandes.", 2: "<strong>Le Partenaire :</strong> Vous possédez des dons pour la collaboration, la médiation et la création d'harmonie. Vous savez instinctivement comment rassembler les gens. Votre potentiel s'épanouit dans les associations et les rôles de soutien.", 3: "<strong>L'Artiste Créatif :</strong> Votre potentiel s'exprime à travers la communication, la créativité et l'interaction sociale. Vous avez un don pour les mots, l'art et la mise en scène. Vous êtes né pour inspirer la joie.", 4: "<strong>L'Organisateur :</strong> Vous avez un talent inné pour l'organisation, la planification et le travail méticuleux. Vous êtes fiable, pragmatique et capable de construire des systèmes durables. Votre potentiel est dans la concrétisation.", 5: "<strong>Le Communicateur Charismatique :</strong> Vos talents sont la polyvalence, l'adaptabilité et la capacité à communiquer avec aisance. Vous savez vendre des idées et vous adapter au changement. Votre potentiel est dans le mouvement et la variété.", 6: "<strong>Le Conseiller Protecteur :</strong> Vous avez un don pour le conseil, l'enseignement et la prise en charge des autres. Vous créez l'harmonie et la beauté autour de vous. Votre potentiel est dans le service et la responsabilité.", 7: "<strong>Le Chercheur de Vérité :</strong> Vos talents sont l'analyse, la recherche et l'intuition. Vous êtes un spécialiste qui aime aller au fond des choses. Votre potentiel s'exprime dans les domaines de la connaissance et de la spiritualité.", 8: "<strong>Le Manager Ambitieux :</strong> Vous possédez un potentiel exceptionnel pour les affaires, la finance et le management. Vous avez une vision stratégique et une grande force de travail. Votre don est de manifester la réussite matérielle.", 9: "<strong>Le Grand Humaniste :</strong> Vos talents sont la compassion, la créativité et une vision large du monde. Vous êtes capable d'inspirer des groupes entiers. Votre potentiel est dans les projets à portée universelle et artistique.", 11: "<strong>Le Visionnaire Intuitif :</strong> Vous avez le potentiel d'un leader charismatique et inspirant. Vos idées sont avant-gardistes et votre intuition est votre meilleur guide. Vous êtes destiné à éclairer les autres.", 22: "<strong>Le Maître Bâtisseur :</strong> Vous avez le potentiel de réaliser des projets d'une envergure exceptionnelle. Vous alliez vision et pragmatisme pour créer des œuvres durables et utiles à la société. Votre potentiel est quasi illimité.", 33: "<strong>Le Maître Enseignant :</strong> Votre potentiel est celui d'un guide spirituel et d'un guérisseur. Vous exprimez un amour et une compassion profonds qui inspirent et élèvent les autres. Votre don est celui du sacrifice altruiste." },
+                ame: { 1: "<strong>Désir d'Indépendance :</strong> Au plus profond de vous, vous aspirez à être le numéro un, à diriger votre propre vie et à être reconnu pour vos réussites individuelles. Vous détestez recevoir des ordres et avez besoin d'autonomie.", 2: "<strong>Désir d'Harmonie :</strong> Votre âme recherche l'amour, la paix et l'union. Vous êtes profondément heureux lorsque vous êtes en partenariat, que ce soit en amitié, en amour ou au travail. Le conflit vous est insupportable.", 3: "<strong>Désir d'Expression :</strong> Vous avez un besoin vital de créer, de communiquer et d'exprimer votre joie de vivre. L'art, l'écriture, la musique ou simplement le fait d'être sociable sont essentiels à votre bonheur.", 4: "<strong>Désir de Stabilité :</strong> Votre motivation la plus profonde est la quête de sécurité et de structure. Vous avez besoin d'un cadre, de règles et d'un plan solide pour vous sentir en paix. Le désordre et l'incertitude vous angoissent.", 5: "<strong>Désir de Liberté :</strong> Votre âme a soif de changement, de voyage, d'aventure et de nouvelles expériences. Vous avez besoin de vous sentir libre de toute contrainte et d'explorer le monde. La routine vous étouffe.", 6: "<strong>Désir de Service :</strong> Vous êtes animé par un profond besoin de prendre soin des autres, de créer un foyer harmonieux et de vous sentir utile à votre communauté. L'amour et la responsabilité sont vos moteurs.", 7: "<strong>Désir de Connaissance :</strong> Votre âme est celle d'un chercheur. Vous avez un besoin insatiable de comprendre, d'analyser et de percer les mystères de la vie. La solitude et la réflexion vous ressourcent.", 8: "<strong>Désir de Maîtrise :</strong> Au fond de vous, vous aspirez au succès, à la reconnaissance et à la maîtrise du monde matériel. Vous êtes motivé par les défis et le désir d'atteindre des postes de pouvoir et d'influence.", 9: "<strong>Désir d'Universalité :</strong> Votre âme est tournée vers l'humanité. Vous êtes motivé par de grandes causes, le désir d'aider les autres et de contribuer à un monde meilleur. Vous avez une vision large et généreuse.", 11: "<strong>Désir de Révélation :</strong> Votre âme aspire à une connexion spirituelle intense et à l'inspiration. Vous êtes motivé par des idéaux élevés et le désir d'apporter une lumière nouvelle au monde. Vous cherchez la vérité au-delà des apparences.", 22: "<strong>Désir de Bâtir pour l'Humanité :</strong> Votre âme a des ambitions grandioses. Vous ne désirez pas seulement construire, mais construire quelque chose de monumental qui laissera une trace durable et servira le plus grand nombre.", 33: "<strong>Désir d'Amour Inconditionnel :</strong> Votre désir le plus profond est de guérir le monde par la compassion et le service total. Vous êtes motivé par un amour universel qui transcende les liens personnels." },
+                personnalite: { 1: "<strong>L'Image du Chef :</strong> Vous apparaissez aux autres comme une personne confiante, déterminée et indépendante. On vous perçoit comme un leader naturel, parfois un peu autoritaire mais toujours prêt à prendre les devants.", 2: "<strong>L'Image du Diplomate :</strong> Les autres vous voient comme quelqu'un de charmant, coopératif et attentionné. Vous projetez une image de douceur et de tact, et l'on vient naturellement vous demander conseil ou médiation.", 3: "<strong>L'Image de l'Artiste Sociable :</strong> On vous perçoit comme quelqu'un de pétillant, d'optimiste et de très communicatif. Vous avez une aura de créativité et de joie de vivre qui attire les autres à vous.", 4: "<strong>L'Image du Pilier Fiable :</strong> Vous projetez une image de sérieux, de stabilité et de fiabilité. Les autres vous voient comme quelqu'un de travailleur, d'organisé et sur qui l'on peut toujours compter.", 5: "<strong>L'Image de l'Aventurier Charismatique :</strong> On vous perçoit comme une personne magnétique, adaptable et pleine d'entrain. Vous donnez l'impression de ne jamais avoir peur du changement et de toujours être prêt pour une nouvelle aventure.", 6: "<strong>L'Image du Parent Universel :</strong> Les autres vous voient comme une personne chaleureuse, responsable et bienveillante. Vous projetez une aura de protection et de conseil, et l'on se sent en sécurité à vos côtés.", 7: "<strong>L'Image du Sage Mystérieux :</strong> On vous perçoit comme quelqu'un d'intelligent, de réservé et d'un peu énigmatique. Vous donnez l'impression d'observer et d'analyser le monde avec une grande profondeur.", 8: "<strong>L'Image de la Puissance :</strong> Vous projetez une image de force, d'ambition et de contrôle. Les autres vous voient comme quelqu'un de compétent, de puissant et destiné au succès matériel.", 9: "<strong>L'Image de l'Humaniste Sage :</strong> On vous perçoit comme une personne tolérante, généreuse et charismatique. Vous dégagez une sagesse et une ouverture d'esprit qui inspirent le respect et l'admiration.", 11: "<strong>L'Image de l'Intuitif Inspiré :</strong> Les autres vous voient comme quelqu'un d'électrique, d'intuitif et de visionnaire. Vous pouvez sembler un peu nerveux ou intense, mais votre perspicacité est évidente.", 22: "<strong>L'Image du Bâtisseur de Confiance :</strong> Vous projetez une image d'une compétence et d'une fiabilité exceptionnelles. On vous perçoit comme quelqu'un capable de gérer de grands projets avec une aisance déconcertante.", 33: "<strong>L'Image du Guide Bienveillant :</strong> On vous perçoit comme une source d'amour et de compassion. Vous dégagez une énergie de guérison et de sagesse profonde qui touche les autres au cœur." },
+                nombreActif: { 1: "<strong>Action Directe :</strong> Votre prénom vous pousse à agir de manière directe, indépendante et décisive. Quand une idée vous vient, vous avez tendance à la mettre en œuvre immédiatement, sans attendre les autres.", 2: "<strong>Action Collaborative :</strong> Vous agissez de préférence en collaboration. Avant de vous lancer, vous cherchez à obtenir le soutien ou l'avis des autres. Votre force réside dans l'action de groupe.", 3: "<strong>Action Créative :</strong> Votre manière d'agir est joyeuse, créative et expressive. Vous mettez de l'enthousiasme dans vos actions et vous aimez trouver des solutions originales et communiquer sur vos projets.", 4: "<strong>Action Méthodique :</strong> Vous agissez de façon planifiée, organisée et persévérante. Vous préférez avancer pas à pas, en vous assurant que chaque étape est solide avant de passer à la suivante.", 5: "<strong>Action Adaptable :</strong> Vous agissez de manière rapide, flexible et opportuniste. Vous êtes capable de changer de direction rapidement et de saisir les opportunités au vol. La routine dans l'action vous ennuie.", 6: "<strong>Action Responsable :</strong> Vos actions sont motivées par le sens des responsabilités et le désir d'aider. Vous agissez souvent pour le bien-être des autres, en prenant en compte l'impact de vos décisions sur votre entourage.", 7: "<strong>Action Réfléchie :</strong> Vous n'agissez pas sur un coup de tête. Vous avez besoin d'analyser la situation, de rechercher des informations et de comprendre le 'pourquoi' avant de vous engager. Votre action est stratégique.", 8: "<strong>Action Ambitieuse :</strong> Votre mode d'action est puissant, efficace et orienté vers un objectif. Vous agissez avec ambition et autorité, en visant des résultats concrets et significatifs.", 9: "<strong>Action Altruiste :</strong> Vous agissez souvent pour une cause plus grande que vous. Vos actions sont empreintes d'idéalisme et d'une vision à long terme. Vous êtes capable de motiver les autres à agir avec vous.", 11: "<strong>Action Intuitive :</strong> Vous agissez en suivant votre puissante intuition. Vous 'sentez' ce qu'il faut faire, même si ce n'est pas toujours logique. Vos actions sont souvent inspirées et peuvent surprendre votre entourage.", 22: "<strong>Action à Grande Échelle :</strong> Votre manière d'agir est pragmatique mais vise très haut. Vous mettez en œuvre des projets ambitieux avec une efficacité redoutable, en transformant des visions en réalité tangible.", 33: "<strong>Action Compassionnelle :</strong> Vous agissez mû par un désir de guérir et de servir. Chacune de vos actions vise à apporter du réconfort et de l'aide, souvent au détriment de vos propres intérêts." },
+                anneePersonnelle: { 1: "<strong>Nouveau Départ :</strong> C'est une année pour planter de nouvelles graines, lancer des projets et affirmer votre indépendance. Osez prendre des initiatives, car l'énergie est au commencement et à l'action individuelle.", 2: "<strong>Patience et Coopération :</strong> Le rythme ralentit. C'est une année pour développer vos relations, faire preuve de diplomatie et laisser les choses mûrir. Les partenariats et l'intuition sont favorisés.", 3: "<strong>Créativité et Sociabilité :</strong> L'énergie est à la joie, à l'expression et à la communication. C'est une excellente année pour vous amuser, voir des amis, démarrer un hobby créatif et laisser parler votre cœur.", 4: "<strong>Travail et Construction :</strong> C'est une année pour travailler dur, vous organiser et construire des fondations solides pour l'avenir. La discipline et l'effort méthodique seront récompensés. Ne négligez pas les détails.", 5: "<strong>Changement et Liberté :</strong> Attendez-vous à du mouvement, des changements et des opportunités inattendues. C'est une année pour voyager, apprendre de nouvelles choses et vous adapter. La flexibilité est la clé.", 6: "<strong>Amour et Responsabilités :</strong> Les thèmes du foyer, de la famille et des responsabilités sont au premier plan. C'est une année pour harmoniser vos relations, prendre soin de vos proches et embellir votre environnement.", 7: "<strong>Introspection et Spiritualité :</strong> C'est une année de pause et de réflexion. Prenez du temps pour vous, pour analyser votre vie, pour étudier ou pour vous connecter à votre spiritualité. Ne forcez pas les choses.", 8: "<strong>Ambition et Finances :</strong> L'énergie est focalisée sur la carrière, les finances et le pouvoir personnel. C'est une année pour récolter les fruits de votre travail, prendre des décisions financières importantes et affirmer votre autorité.", 9: "<strong>Bilan et Humanisme :</strong> C'est la fin d'un cycle de 9 ans. Une année pour faire le bilan, lâcher prise sur ce qui ne vous sert plus et vous ouvrir à une vision plus large. L'altruisme et le service sont valorisés." }
+            };
+
+            form.addEventListener('submit', e => {
                 e.preventDefault();
                 const fullName = document.getElementById('full-name').value;
                 const birthDate = document.getElementById('birth-date').value;
-                if (!fullName || !birthDate) {
-                    alert("Veuillez remplir tous les champs.");
-                    return;
-                }
-                displayResults(fullName, birthDate);
+                if (!fullName || !birthDate) { alert("Veuillez remplir tous les champs."); return; }
+                displayAllResults(fullName, birthDate);
             });
 
-            function reduceNumber(n) {
+            // --- Fonctions de calcul améliorées (retournent {value, details}) ---
+
+            function reduceNumber(n, details = []) {
                 let num = parseInt(n, 10);
-                // Boucle de réduction théosophique
+                let currentDetails = String(num);
                 while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
-                    num = String(num).split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+                    const digits = String(num).split('');
+                    num = digits.reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+                    currentDetails += ` ➔ ${digits.join(' + ')} = ${num}`;
                 }
-                return num;
+                details.push(currentDetails);
+                return { value: num, details: details.join(' ➔ ') };
             }
 
-            function calculateNumberFromName(name, type = 'all') {
-                const normalizedName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/[^A-Z]/g, '');
+            function calculateNumberFromName(name, type) {
+                const normalizedName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/[^A-Z\s]/g, '');
                 let sum = 0;
+                let details = [];
                 for (const char of normalizedName) {
+                    if (char === ' ') continue;
                     const isVowel = vowels.includes(char);
-                    if ( (type === 'vowels' && isVowel) || (type === 'consonants' && !isVowel) || (type === 'all') ) {
-                        sum += letterValues[char] || 0;
+                    const shouldInclude = (type === 'all') || (type === 'vowels' && isVowel) || (type === 'consonants' && !isVowel);
+                    if (shouldInclude) {
+                        const value = letterValues[char] || 0;
+                        sum += value;
+                        details.push(`${char}(${value})`);
                     }
                 }
-                return reduceNumber(sum);
+                const calculationString = `${details.join(' + ')} = ${sum}`;
+                return reduceNumber(sum, [calculationString]);
             }
             
             function calculateLifePath(date) {
                 const [year, month, day] = date.split('-');
-                const daySum = reduceNumber(day);
-                const monthSum = reduceNumber(month);
-                const yearSum = reduceNumber(year);
-                let totalSum = daySum + monthSum + yearSum;
-                return reduceNumber(totalSum);
+                const dayReduced = reduceNumber(day);
+                const monthReduced = reduceNumber(month);
+                const yearReduced = reduceNumber(year);
+                const totalSum = dayReduced.value + monthReduced.value + yearReduced.value;
+                
+                let details = `Jour: ${dayReduced.details}<br>Mois: ${monthReduced.details}<br>Année: ${yearReduced.details}<br>`;
+                details += `Total: ${dayReduced.value} + ${monthReduced.value} + ${yearReduced.value} = ${totalSum}`;
+
+                const finalResult = reduceNumber(totalSum);
+                if (totalSum !== finalResult.value) {
+                    details += ` ➔ ${finalResult.details}`;
+                }
+                return { value: finalResult.value, details };
             }
 
-            function displayResults(fullName, birthDate) {
-                resultsContainer.innerHTML = ''; 
-                resultsContainer.classList.remove('hidden');
+            function calculatePersonalYear(birthDate) {
+                const currentYear = new Date().getFullYear();
+                const [, month, day] = birthDate.split('-');
+                
+                const dayReduced = reduceNumber(day);
+                const monthReduced = reduceNumber(month);
+                const yearReduced = reduceNumber(currentYear);
+                const totalSum = dayReduced.value + monthReduced.value + yearReduced.value;
 
+                let details = `Jour de naissance: ${dayReduced.details}<br>Mois de naissance: ${monthReduced.details}<br>Année en cours: ${yearReduced.details}<br>`;
+                details += `Total: ${dayReduced.value} + ${monthReduced.value} + ${yearReduced.value} = ${totalSum}`;
+                
+                const finalResult = reduceNumber(totalSum);
+                if (totalSum !== finalResult.value) {
+                    details += ` ➔ ${finalResult.details}`;
+                }
+                return { value: finalResult.value, details };
+            }
+
+            // --- Fonctions d'affichage ---
+
+            function displaySummary(lifePath, expression) {
+                const lpText = interpretations.cheminDeVie[lifePath].split(':')[0].toLowerCase();
+                const expText = interpretations.expression[expression].split(':')[0].toLowerCase();
+                let summaryText = `Votre <strong>Chemin de Vie ${lifePath}</strong> (votre mission) vous invite à devenir <strong>${lpText}</strong>. Pour y parvenir, vous disposez des dons de votre <strong>Nombre d'Expression ${expression}</strong> (vos outils), qui vous définit comme <strong>${expText}</strong>.`;
+
+                if (lifePath === expression || (lifePath === 11 && expression === 2) || (lifePath === 22 && expression === 4) || (lifePath === 33 && expression === 6)) {
+                    summaryText += "<br><br>✨ <strong>Synergie Puissante :</strong> Votre mission et vos talents sont en parfaite harmonie. Votre potentiel d'accomplissement est immense car vos outils sont parfaitement adaptés à votre chemin.";
+                } else {
+                    summaryText += "<br><br>💡 <strong>Dynamique de Croissance :</strong> Vos talents et votre mission sont différents, créant une dynamique unique. Votre défi sera d'utiliser vos outils pour accomplir une mission qui peut sembler différente, ce qui est une source de grande richesse et d'apprentissage.";
+                }
+
+                summaryContainer.innerHTML = `<div class="summary-card"><h2>Synthèse Stratégique</h2><p>${summaryText}</p></div>`;
+            }
+
+            function displayAllResults(fullName, birthDate) {
+                resultsWrapper.classList.remove('hidden');
+                resultsContainer.innerHTML = ''; 
+                summaryContainer.innerHTML = '';
+                
                 const lifePath = calculateLifePath(birthDate);
                 const expression = calculateNumberFromName(fullName, 'all');
                 const soulUrge = calculateNumberFromName(fullName, 'vowels');
                 const personality = calculateNumberFromName(fullName, 'consonants');
-                const firstName = fullName.split(' ')[0];
-                const activeNumber = calculateNumberFromName(firstName, 'all');
+                const activeNumber = calculateNumberFromName(fullName.split(' ')[0], 'all');
+                const personalYear = calculatePersonalYear(birthDate);
+
+                displaySummary(lifePath.value, expression.value);
                 
                 const resultsData = [
-                    { key: "cheminDeVie", title: "Chemin de Vie", number: lifePath, description: "Votre mission de vie, les leçons à apprendre, le grand axe de votre destinée." },
-                    { key: "expression", title: "Nombre d'Expression", number: expression, description: "Vos talents innés, vos potentiels, vos forces et vos faiblesses." },
-                    { key: "ame", title: "Nombre de l'Âme (Intime)", number: soulUrge, description: "Ce qui vous motive profondément, vos désirs secrets, votre 'moi' intérieur." },
-                    { key: "personnalite", title: "Nombre de Personnalité", number: personality, description: "L'image que vous projetez, ce que les autres perçoivent de vous en premier lieu." },
-                    { key: "nombreActif", title: "Nombre Actif", number: activeNumber, description: "Lié à votre prénom, il représente votre énergie d'action au quotidien." }
+                    { key: "anneePersonnelle", title: `Année Personnelle ${new Date().getFullYear()}`, result: personalYear, description: "L'énergie et les opportunités qui teintent votre année en cours." },
+                    { key: "cheminDeVie", title: "Chemin de Vie", result: lifePath, description: "Votre mission de vie, les leçons à apprendre, le grand axe de votre destinée." },
+                    { key: "expression", title: "Nombre d'Expression", result: expression, description: "Vos talents innés, vos potentiels, vos forces et vos faiblesses." },
+                    { key: "ame", title: "Nombre de l'Âme (Intime)", result: soulUrge, description: "Ce qui vous motive profondément, vos désirs secrets, votre 'moi' intérieur." },
+                    { key: "personnalite", title: "Nombre de Personnalité", result: personality, description: "L'image que vous projetez, ce que les autres perçoivent de vous en premier lieu." },
+                    { key: "nombreActif", title: "Nombre Actif", result: activeNumber, description: "Lié à votre prénom, il représente votre énergie d'action au quotidien." }
                 ];
 
                 resultsData.forEach(res => {
-                    const interpretationText = interpretations[res.key][res.number] || "L'interprétation pour ce nombre est en cours de rédaction.";
+                    const interpretationText = interpretations[res.key][res.result.value] || "Interprétation non disponible.";
                     const card = document.createElement('div');
                     card.className = 'result-card';
                     card.innerHTML = `
-                        <h2><span class="number-circle">${res.number}</span>${res.title}</h2>
+                        <h2><span class="number-circle">${res.result.value}</span>${res.title}</h2>
                         <p class="description">${res.description}</p>
                         <p>${interpretationText}</p>
+                        <details>
+                            <summary>Voir le calcul</summary>
+                            <div class="calculation-details">${res.result.details}</div>
+                        </details>
                     `;
                     resultsContainer.appendChild(card);
                 });
+
+                printBtn.classList.remove('hidden');
+                printBtn.onclick = () => window.print();
             }
         });
     </script>
-
 </body>
 </html>
