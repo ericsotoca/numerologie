@@ -65,11 +65,27 @@
         .close-button { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
         .hidden { display: none; }
         #compatibility-results h3 { color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 5px; margin-top: 30px; }
+        /* --- THEME TOGGLE --- */
+        .theme-switch-wrapper { display: flex; align-items: center; position: absolute; top: 20px; right: 20px; }
+        .theme-switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(26px); }
     </style>
 </head>
 <body>
     <div class="container">
-        <header><h1>🔮 Numérologie - Grand Maître</h1></header>
+        <header>
+            <h1>🔮 Numérologie - Grand Maître</h1>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </header>
         
         <nav class="app-nav">
             <button id="nav-theme" class="active">Mon Thème</button>
