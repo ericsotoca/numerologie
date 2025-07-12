@@ -1,1 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numérologie Stratégique</title>
+    
+    <!-- Polices de caractères depuis Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
+    <!-- === SECTION CSS === -->
+    <style>
+        :root {
+            --primary-color: #4a148c; /* Violet profond */
+            --secondary-color: #7c4dff; /* Violet clair */
+            --background-color: #f3e5f5; /* Lavande très clair */
+            --text-color: #333;
+            --card-bg: #fff;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: transparent;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        main {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 20, 140, 0.3);
+        }
+
+        #results-container {
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        #results-container:not(.hidden) {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-card {
+            background-color: var(--background-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        .result-card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .result-card .number-circle {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .result-card p {
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🔮 Numérologie Stratégique</h1>
+            <p>Découvrez les clés de votre personnalité grâce à votre nom et votre date de naissance.</p>
+        </header>
+
+        <main>
+            <form id="numerology-form">
+                <div class="input-group">
+                    <label for="full-name">Noms et Prénoms complets (de naissance)</label>
+                    <input type="text" id="full-name" placeholder="Ex: Jean Philippe Dupont" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="birth-date">Date de naissance</label>
+                    <input type="date" id="birth-date" required>
+                </div>
+                
+                <button type="submit">Calculer mon thème</button>
+            </form>
+
+            <div id="results-container" class="hidden">
+                <!-- Les résultats seront injectés ici par JavaScript -->
+            </div>
+        </main>
+        
+        <footer>
+            <p>Application créée pour le divertissement. Ne remplace pas un conseil professionnel.</p>
+        </footer>
+    </div>
+
+    <!-- === SECTION JAVASCRIPT === -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('numerology-form');
+            const resultsContainer = document.getElementById('results-container');
+
+            // Table de correspondance des lettres (Pythagore)
+            const letterValues = {
+                'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8, 'I': 9,
+                'J': 1, 'K': 2, 'L': 3, 'M': 4, 'N': 5, 'O': 6, 'P': 7, 'Q': 8, 'R': 9,
+                'S': 1, 'T': 2, 'U': 3, 'V': 4, 'W': 5, 'X': 6, 'Y': 7, 'Z': 8
+            };
+
+            const vowels = ['A', 'E', 'I', 'O', 'U', 'Y'];
+
+            // Interprétations (simplifiées pour l'exemple)
+            const interpretations = {
+                cheminDeVie: {
+                    1: "<strong>Le Leader :</strong> Indépendance, ambition, initiative. Vous êtes un pionnier né pour diriger et innover.",
+                    2: "<strong>Le Diplomate :</strong> Coopération, sensibilité, intuition. Vous excellez dans les partenariats et la médiation.",
+                    3: "<strong>Le Communicant :</strong> Créativité, expression, sociabilité. Vous avez un don pour les mots et l'art.",
+                    4: "<strong>Le Bâtisseur :</strong> Stabilité, travail, organisation. Vous construisez des fondations solides pour l'avenir.",
+                    5: "<strong>L'Aventurier :</strong> Liberté, changement, curiosité. Vous avez besoin de mouvement et d'expériences variées.",
+                    6: "<strong>Le Responsable :</strong> Harmonie, famille, service. Vous êtes un protecteur qui prend soin des autres.",
+                    7: "<strong>Le Sage :</strong> Analyse, introspection, spiritualité. Vous êtes un chercheur de vérité et de connaissance.",
+                    8: "<strong>Le Puissant :</strong> Ambition, pouvoir, matérialisme. Vous avez le potentiel de réussir dans le monde des affaires.",
+                    9: "<strong>L'Humaniste :</strong> Altruisme, compassion, universalisme. Vous êtes tourné vers les autres et les grandes causes.",
+                    11: "<strong>L'Inspiré (Maître Nombre) :</strong> Grande intuition, idéalisme, révélation. Vous êtes un canal pour des idées supérieures.",
+                    22: "<strong>Le Grand Bâtisseur (Maître Nombre) :</strong> Maîtrise matérielle, projets d'envergure, pouvoir de réalisation.",
+                    33: "<strong>Le Guide Spirituel (Maître Nombre) :</strong> Compassion universelle, service désintéressé, enseignement. (Très rare)"
+                },
+                expression: {
+                    // Pour simplifier, nous réutilisons les mêmes interprétations
+                },
+                ame: {
+                    1: "Vous aspirez profondément à l'indépendance et à l'action.",
+                    2: "Votre désir le plus cher est l'union, l'harmonie et la collaboration.",
+                    3: "Vous avez un besoin vital de vous exprimer, de créer et de communiquer votre joie.",
+                    4: "Votre âme recherche la sécurité, la stabilité et un cadre solide.",
+                    5: "Vous avez une soif insatiable de liberté, de voyage et d'expériences nouvelles.",
+                    6: "Votre motivation profonde vient du besoin d'aimer, de protéger et d'harmoniser votre entourage.",
+                    7: "Vous êtes animé par une quête de connaissance, de sagesse et de vérité intérieure.",
+                    8: "Votre désir le plus profond est de maîtriser le monde matériel et d'atteindre le succès.",
+                    9: "Votre âme est tournée vers l'humanité, la compassion et le service désintéressé.",
+                    11: "Vous aspirez à l'inspiration et à la révélation, guidé par une intuition puissante.",
+                    22: "Votre désir profond est de construire quelque chose de grand et de durable pour le bien commun."
+                },
+                personnalite: {
+                    1: "Vous apparaissez comme une personne décidée, directe et indépendante.",
+                    2: "On vous perçoit comme quelqu'un de charmant, diplomate et coopératif.",
+                    3: "Vous projetez une image sociable, optimiste et créative.",
+                    4: "Vous donnez l'impression d'être quelqu'un de sérieux, fiable et travailleur.",
+                    5: "Les autres vous voient comme une personne charismatique, adaptable et aimant le changement.",
+                    6: "Vous apparaissez comme une personne responsable, chaleureuse et digne de confiance.",
+                    7: "On vous perçoit comme quelqu'un de réservé, intelligent et mystérieux.",
+                    8: "Vous projetez une image de puissance, d'ambition et de contrôle.",
+                    9: "Vous donnez l'impression d'être altruiste, sage et ouvert sur le monde.",
+                    11: "Les autres vous voient comme quelqu'un d'inspiré, d'intuitif et parfois de nerveux.",
+                    22: "Vous projetez une image de bâtisseur compétent et de leader charismatique."
+                }
+            };
+            interpretations.expression = interpretations.cheminDeVie; // Simplification
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); // Empêche le rechargement de la page
+
+                const fullName = document.getElementById('full-name').value;
+                const birthDate = document.getElementById('birth-date').value;
+
+                if (!fullName || !birthDate) {
+                    alert("Veuillez remplir tous les champs.");
+                    return;
+                }
+
+                displayResults(fullName, birthDate);
+            });
+
+            function reduceNumber(num) {
+                // Les Maîtres Nombres 11, 22, 33 ne sont pas réduits (sauf dans certains contextes, mais on simplifie ici)
+                if (num === 11 || num === 22 || num === 33) {
+                    return num;
+                }
+                let sum = String(num).split('').reduce((acc, digit) => acc + parseInt(digit), 0);
+                // On continue de réduire tant que le nombre est supérieur à 9 ET n'est pas un maître nombre
+                return (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) ? reduceNumber(sum) : sum;
+            }
+
+            function calculateNumberFromName(name, type = 'all') { // type: 'all', 'vowels', 'consonants'
+                const normalizedName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/[^A-Z]/g, '');
+                
+                let sum = 0;
+                for (const char of normalizedName) {
+                    const isVowel = vowels.includes(char);
+                    if ((type === 'vowels' && isVowel) || (type === 'consonants' && !isVowel) || type === 'all') {
+                        sum += letterValues[char] || 0;
+                    }
+                }
+                return reduceNumber(sum);
+            }
+            
+            function calculateLifePath(date) {
+                const [year, month, day] = date.split('-');
+                
+                const daySum = reduceNumber(parseInt(day));
+                const monthSum = reduceNumber(parseInt(month));
+                const yearSum = reduceNumber(parseInt(year));
+
+                // On ne réduit pas les maîtres nombres intermédiaires
+                let totalSum = daySum + monthSum + yearSum;
+
+                return reduceNumber(totalSum);
+            }
+
+            function displayResults(fullName, birthDate) {
+                resultsContainer.innerHTML = ''; // Nettoyer les anciens résultats
+                resultsContainer.classList.remove('hidden');
+
+                const lifePath = calculateLifePath(birthDate);
+                const expression = calculateNumberFromName(fullName, 'all');
+                const soulUrge = calculateNumberFromName(fullName, 'vowels');
+                const personality = calculateNumberFromName(fullName, 'consonants');
+                const firstName = fullName.split(' ')[0];
+                const activeNumber = calculateNumberFromName(firstName, 'all');
+                
+                const results = [
+                    { title: "Chemin de Vie", number: lifePath, description: "Votre mission de vie, les leçons à apprendre.", interpretation: interpretations.cheminDeVie[lifePath] },
+                    { title: "Nombre d'Expression", number: expression, description: "Vos talents, vos potentiels et ce que vous devez accomplir.", interpretation: interpretations.expression[expression] },
+                    { title: "Nombre de l'Âme (Intime)", number: soulUrge, description: "Ce qui vous motive profondément, vos désirs secrets.", interpretation: interpretations.ame[soulUrge] },
+                    { title: "Nombre de Personnalité", number: personality, description: "L'image que vous projetez, ce que les autres voient de vous.", interpretation: interpretations.personnalite[personality] },
+                    { title: "Nombre Actif", number: activeNumber, description: "Lié à votre prénom, il représente votre énergie d'action au quotidien.", interpretation: "Votre énergie active " + activeNumber + " influence la manière dont vous agissez au quotidien. (Interprétation simplifiée)" }
+                ];
+
+                results.forEach(res => {
+                    const card = document.createElement('div');
+                    card.className = 'result-card';
+                    card.innerHTML = `
+                        <h2><span class="number-circle">${res.number}</span>${res.title}</h2>
+                        <p><em>${res.description}</em></p>
+                        <p>${res.interpretation || "Interprétation non disponible pour ce nombre."}</p>
+                    `;
+                    resultsContainer.appendChild(card);
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
