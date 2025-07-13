@@ -65,15 +65,12 @@
         .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary-color); }
         input:checked + .slider:before { transform: translateX(26px); }
-        /* Compatibility */
         #compatibility-results .card { border-left-width: 6px; }
         #compatibility-results .card.harmony { border-left-color: var(--harmony-color); }
         #compatibility-results .card.challenge { border-left-color: var(--challenge-color); }
         #compatibility-results .card.neutral { border-left-color: var(--neutral-color); }
-        /* Energy Chart */
         .energy-chart-svg-container { margin-top: 15px; }
         .energy-analysis { margin-top: 15px; padding: 15px; background-color: color-mix(in srgb, var(--primary-color) 5%, transparent); border-radius: var(--border-radius); }
-        /* Life Cycles */
         .life-cycles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .cycle-card { padding: 15px; border-radius: var(--border-radius); background-color: color-mix(in srgb, var(--primary-color) 5%, transparent); text-align: center; }
         .cycle-card h3 { font-family: 'Lora', serif; color: var(--primary-color); margin-top: 0; }
@@ -98,7 +95,10 @@
                 <div id="welcome-back" class="hidden"></div>
                 <form id="numerology-form">
                     <div class="input-group"><label for="full-name">Vos Noms & Prénoms (naissance)</label><input type="text" id="full-name" required></div>
-                    <div class="input-group"><label for="birth-date">Votre Date de naissance</label><input type="date" id="birth-date" required></div>
+                    <div class="input-group">
+                        <label for="birth-date">Votre Date de naissance</label>
+                        <input type="text" id="birth-date" required placeholder="JJ/MM/AAAA" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}">
+                    </div>
                     <button type="submit">Calculer mon Thème Complet</button>
                 </form>
                 <div id="results-wrapper" class="hidden">
@@ -122,11 +122,17 @@
                 <form id="compatibility-form">
                     <h4>Personne 1 (Vous)</h4>
                     <div class="input-group"><label for="p1-full-name">Noms & Prénoms</label><input type="text" id="p1-full-name" required></div>
-                    <div class="input-group"><label for="p1-birth-date">Date de naissance</label><input type="date" id="p1-birth-date" required></div>
+                    <div class="input-group">
+                        <label for="p1-birth-date">Date de naissance</label>
+                        <input type="text" id="p1-birth-date" required placeholder="JJ/MM/AAAA" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}">
+                    </div>
                     <hr>
                     <h4>Personne 2</h4>
                     <div class="input-group"><label for="p2-full-name">Noms & Prénoms</label><input type="text" id="p2-full-name" required></div>
-                    <div class="input-group"><label for="p2-birth-date">Date de naissance</label><input type="date" id="p2-birth-date" required></div>
+                    <div class="input-group">
+                        <label for="p2-birth-date">Date de naissance</label>
+                        <input type="text" id="p2-birth-date" required placeholder="JJ/MM/AAAA" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}">
+                    </div>
                     <button type="submit">Analyser la Compatibilité</button>
                 </form>
                 <div id="compatibility-results" class="hidden"></div>
@@ -150,35 +156,10 @@
                     personnalite: { 1: "<strong>L'Image du Chef :</strong> Vous apparaissez comme une personne confiante et indépendante.", 2: "<strong>L'Image du Diplomate :</strong> Les autres vous voient comme quelqu'un de charmant et coopératif.", 3: "<strong>L'Image de l'Artiste Sociable :</strong> On vous perçoit comme quelqu'un de pétillant et communicatif.", 4: "<strong>L'Image du Pilier Fiable :</strong> Vous projetez une image de sérieux, de stabilité et de fiabilité.", 5: "<strong>L'Image de l'Aventurier :</strong> On vous perçoit comme une personne magnétique et adaptable.", 6: "<strong>L'Image du Parent Universel :</strong> Les autres vous voient comme une personne chaleureuse et bienveillante.", 7: "<strong>L'Image du Sage Mystérieux :</strong> On vous perçoit comme quelqu'un d'intelligent et de réservé.", 8: "<strong>L'Image de la Puissance :</strong> Vous projetez une image de force, d'ambition et de contrôle.", 9: "<strong>L'Image de l'Humaniste :</strong> On vous perçoit comme une personne tolérante et généreuse.", 11: "<strong>L'Image de l'Intuitif :</strong> Vous semblez connecté à une autre réalité.", 22: "<strong>L'Image du Bâtisseur :</strong> On perçoit votre potentiel à réaliser de grandes choses.", 33: "<strong>L'Image du Guide :</strong> Vous dégagez une aura de compassion et de sagesse." },
                     nombreActif: { 1: "<strong>Action Directe :</strong> Votre prénom vous pousse à agir de manière directe et décisive.", 2: "<strong>Action Collaborative :</strong> Vous agissez de préférence en collaboration.", 3: "<strong>Action Créative :</strong> Votre manière d'agir est joyeuse et expressive.", 4: "<strong>Action Méthodique :</strong> Vous agissez de façon planifiée et persévérante.", 5: "<strong>Action Adaptable :</strong> Vous agissez de manière rapide et flexible.", 6: "<strong>Action Responsable :</strong> Vos actions sont motivées par le sens des responsabilités.", 7: "<strong>Action Réfléchie :</strong> Vous avez besoin d'analyser la situation avant de vous engager.", 8: "<strong>Action Ambitieuse :</strong> Votre mode d'action est puissant et orienté vers un objectif.", 9: "<strong>Action Altruiste :</strong> Vous agissez souvent pour une cause plus grande que vous.", 11: "<strong>Action Inspirée :</strong> Vous agissez selon votre intuition.", 22: "<strong>Action Constructive :</strong> Vous êtes poussé à agir pour des projets concrets.", 33: "<strong>Action de Service :</strong> Vos actions visent à guider les autres." }
                 },
-                dailyVibration: { 
-                    1:"<strong>Initiative & Action :</strong> Journée idéale pour démarrer de nouveaux projets et affirmer votre indépendance. Prenez les devants !",
-                    2:"<strong>Patience & Diplomatie :</strong> Ralentissez. C'est un jour pour écouter, collaborer et faire preuve de tact. Favorisez les partenariats.",
-                    3:"<strong>Créativité & Communication :</strong> Exprimez-vous ! Une excellente journée pour socialiser, rire, créer et partager vos idées avec optimisme.",
-                    4:"<strong>Travail & Organisation :</strong> Concentrez-vous sur les détails et le travail méthodique. Journée parfaite pour ranger, planifier et construire des bases solides.",
-                    5:"<strong>Changement & Aventure :</strong> Attendez-vous à l'inattendu. Soyez flexible, ouvert aux nouvelles expériences et prêt à bouger. Évitez la routine.",
-                    6:"<strong>Harmonie & Responsabilités :</strong> Le foyer et les relations sont au centre. Un jour pour prendre soin de vos proches, embellir votre environnement et assumer vos responsabilités.",
-                    7:"<strong>Introspection & Réflexion :</strong> Prenez du temps pour vous. C'est un jour pour analyser, méditer, et chercher des réponses à l'intérieur. Ne forcez rien.",
-                    8:"<strong>Ambition & Pouvoir :</strong> Concentrez-vous sur vos finances et votre carrière. Journée propice aux décisions importantes, aux négociations et à l'affirmation de votre autorité.",
-                    9:"<strong>Bilan & Altruisme :</strong> C'est un jour pour finaliser, pardonner et lâcher-prise. Aidez les autres et terminez ce qui est en cours avant de commencer du neuf.",
-                    // === DEBUT DE LA CORRECTION ===
-                    11: "<strong>Intuition & Révélation :</strong> Une journée de grande sensibilité. Fiez-vous à votre intuition, elle est particulièrement forte. Les tensions sont possibles, cherchez l'harmonie comme pour un jour 2.",
-                    22: "<strong>Construction & Vision :</strong> Potentiel de réaliser quelque chose de grand. C'est un jour 4 à une échelle supérieure. Rêvez grand, mais ancrez vos actions dans le concret.",
-                    33: "<strong>Compassion & Guérison :</strong> Journée de service et d'amour universel. Une énergie de jour 6 amplifiée. Soyez une source d'inspiration et de réconfort pour les autres."
-                    // === FIN DE LA CORRECTION ===
-                },
+                dailyVibration: { 1:"<strong>Initiative & Action :</strong> Journée idéale pour démarrer de nouveaux projets et affirmer votre indépendance. Prenez les devants !", 2:"<strong>Patience & Diplomatie :</strong> Ralentissez. C'est un jour pour écouter, collaborer et faire preuve de tact. Favorisez les partenariats.", 3:"<strong>Créativité & Communication :</strong> Exprimez-vous ! Une excellente journée pour socialiser, rire, créer et partager vos idées avec optimisme.", 4:"<strong>Travail & Organisation :</strong> Concentrez-vous sur les détails et le travail méthodique. Journée parfaite pour ranger, planifier et construire des bases solides.", 5:"<strong>Changement & Aventure :</strong> Attendez-vous à l'inattendu. Soyez flexible, ouvert aux nouvelles expériences et prêt à bouger. Évitez la routine.", 6:"<strong>Harmonie & Responsabilités :</strong> Le foyer et les relations sont au centre. Un jour pour prendre soin de vos proches, embellir votre environnement et assumer vos responsabilités.", 7:"<strong>Introspection & Réflexion :</strong> Prenez du temps pour vous. C'est un jour pour analyser, méditer, et chercher des réponses à l'intérieur. Ne forcez rien.", 8:"<strong>Ambition & Pouvoir :</strong> Concentrez-vous sur vos finances et votre carrière. Journée propice aux décisions importantes, aux négociations et à l'affirmation de votre autorité.", 9:"<strong>Bilan & Altruisme :</strong> C'est un jour pour finaliser, pardonner et lâcher-prise. Aidez les autres et terminez ce qui est en cours avant de commencer du neuf.", 11: "<strong>Intuition & Révélation :</strong> Une journée de grande sensibilité. Fiez-vous à votre intuition, elle est particulièrement forte. Les tensions sont possibles, cherchez l'harmonie comme pour un jour 2.", 22: "<strong>Construction & Vision :</strong> Potentiel de réaliser quelque chose de grand. C'est un jour 4 à une échelle supérieure. Rêvez grand, mais ancrez vos actions dans le concret.", 33: "<strong>Compassion & Guérison :</strong> Journée de service et d'amour universel. Une énergie de jour 6 amplifiée. Soyez une source d'inspiration et de réconfort pour les autres." },
                 compatibility: {
-                    relations: {
-                        '1': { harmony: [1, 3, 5], challenge: [6, 8], neutral: [2, 4, 7, 9] }, '2': { harmony: [2, 4, 6, 8], challenge: [5, 7], neutral: [1, 3, 9] },
-                        '3': { harmony: [1, 3, 5, 6, 9], challenge: [], neutral: [2, 4, 7, 8] }, '4': { harmony: [2, 4, 6, 8], challenge: [5, 7], neutral: [1, 3, 9] },
-                        '5': { harmony: [1, 3, 5], challenge: [2, 4], neutral: [6, 7, 8, 9] }, '6': { harmony: [2, 3, 4, 6, 9], challenge: [1, 8], neutral: [5, 7] },
-                        '7': { harmony: [7, 9], challenge: [2, 4, 8], neutral: [1, 3, 5, 6] }, '8': { harmony: [2, 4, 6, 8], challenge: [1, 7], neutral: [3, 5, 9] },
-                        '9': { harmony: [3, 6, 9], challenge: [], neutral: [1, 2, 4, 5, 7, 8] },
-                    },
-                    summary: {
-                        harmony: "Dynamique très favorable, marquée par une compréhension et un soutien mutuels. Les énergies s'alignent naturellement.",
-                        challenge: "Relation de croissance. Les différences peuvent créer des frictions, mais offrent de puissantes leçons si elles sont comprises.",
-                        neutral: "Compatibilité équilibrée. La relation dépendra de la volonté des deux partenaires de s'adapter et de communiquer."
-                    }
+                    relations: { '1': { harmony: [1, 3, 5], challenge: [6, 8], neutral: [2, 4, 7, 9] }, '2': { harmony: [2, 4, 6, 8], challenge: [5, 7], neutral: [1, 3, 9] }, '3': { harmony: [1, 3, 5, 6, 9], challenge: [], neutral: [2, 4, 7, 8] }, '4': { harmony: [2, 4, 6, 8], challenge: [5, 7], neutral: [1, 3, 9] }, '5': { harmony: [1, 3, 5], challenge: [2, 4], neutral: [6, 7, 8, 9] }, '6': { harmony: [2, 3, 4, 6, 9], challenge: [1, 8], neutral: [5, 7] }, '7': { harmony: [7, 9], challenge: [2, 4, 8], neutral: [1, 3, 5, 6] }, '8': { harmony: [2, 4, 6, 8], challenge: [1, 7], neutral: [3, 5, 9] }, '9': { harmony: [3, 6, 9], challenge: [], neutral: [1, 2, 4, 5, 7, 8] }, },
+                    summary: { harmony: "Dynamique très favorable, marquée par une compréhension et un soutien mutuels. Les énergies s'alignent naturellement.", challenge: "Relation de croissance. Les différences peuvent créer des frictions, mais offrent de puissantes leçons si elles sont comprises.", neutral: "Compatibilité équilibrée. La relation dépendra de la volonté des deux partenaires de s'adapter et de communiquer." }
                 }
             };
 
@@ -225,8 +206,8 @@
                 calculateDailyVibration(birthDate) {
                     if (!birthDate) return 0;
                     const today = new Date();
-                    const birth = new Date(birthDate);
-                    const sum = this.reduceNumber(birth.getDate()) + this.reduceNumber(birth.getMonth() + 1) + this.reduceNumber(today.getDate()) + this.reduceNumber(today.getMonth() + 1) + this.reduceNumber(today.getFullYear());
+                    const [year, month, day] = birthDate.split('-').map(Number);
+                    const sum = this.reduceNumber(day) + this.reduceNumber(month) + this.reduceNumber(today.getDate()) + this.reduceNumber(today.getMonth() + 1) + this.reduceNumber(today.getFullYear());
                     return this.reduceNumber(sum);
                 },
                 calculateEnergyPresence(fullName) {
@@ -268,13 +249,13 @@
             };
 
             const ui = {
-                elements: { 
-                    form: document.getElementById('numerology-form'), nameInput: document.getElementById('full-name'), dateInput: document.getElementById('birth-date'), 
+                elements: {
+                    form: document.getElementById('numerology-form'), nameInput: document.getElementById('full-name'), dateInput: document.getElementById('birth-date'),
                     resultsWrapper: document.getElementById('results-wrapper'), dailyVibrationContainer: document.getElementById('daily-vibration-container'),
-                    summaryContainer: document.getElementById('summary-container'), energyContainer: document.getElementById('energy-presence-container'), 
+                    summaryContainer: document.getElementById('summary-container'), energyContainer: document.getElementById('energy-presence-container'),
                     cyclesContainer: document.getElementById('life-cycles-container'), resultsContainer: document.getElementById('results-container'),
                     profileCardContainer: document.getElementById('profile-card-container'), profileCardCanvas: document.getElementById('profile-card-canvas'),
-                    printBtn: document.getElementById('print-btn'), aiExportBtn: document.getElementById('ai-export-btn'), profileCardBtn: document.getElementById('profile-card-btn'), 
+                    printBtn: document.getElementById('print-btn'), aiExportBtn: document.getElementById('ai-export-btn'), profileCardBtn: document.getElementById('profile-card-btn'),
                     themeToggle: document.getElementById('theme-toggle'), welcomeBack: document.getElementById('welcome-back'),
                     navTheme: document.getElementById('nav-theme'), navCompatibility: document.getElementById('nav-compatibility'),
                     themeContent: document.getElementById('theme-content'), compatibilityContent: document.getElementById('compatibility-content'),
@@ -284,11 +265,14 @@
                 },
 
                 init() {
-                    this.elements.themeToggle.addEventListener('change', () => { 
-                        document.body.classList.toggle('dark-mode'); 
-                        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); 
+                    this.elements.themeToggle.addEventListener('change', () => {
+                        document.body.classList.toggle('dark-mode');
+                        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
                     });
-                    if (localStorage.getItem('theme') === 'dark') { document.body.classList.add('dark-mode'); this.elements.themeToggle.checked = true; }
+                    if (localStorage.getItem('theme') === 'dark') {
+                        document.body.classList.add('dark-mode');
+                        this.elements.themeToggle.checked = true;
+                    }
                     
                     this.elements.navTheme.addEventListener('click', () => this.toggleView('theme'));
                     this.elements.navCompatibility.addEventListener('click', () => this.toggleView('compatibility'));
@@ -296,12 +280,16 @@
                     this.elements.form.addEventListener('submit', e => { e.preventDefault(); this.handleThemeSubmit(); });
                     this.elements.compatForm.addEventListener('submit', e => { e.preventDefault(); this.handleCompatibilitySubmit(e); });
                     
+                    [this.elements.dateInput, this.elements.p1Date, this.elements.p2Date].forEach(input => {
+                        input.addEventListener('input', this.formatDateInput);
+                    });
+                    
                     const savedUser = JSON.parse(localStorage.getItem('numerologyUser'));
                     if (savedUser && savedUser.name && savedUser.date) {
                         this.elements.nameInput.value = savedUser.name;
-                        this.elements.dateInput.value = savedUser.date;
+                        this.elements.dateInput.value = this.formatDateForDisplay(savedUser.date);
                         this.elements.p1Name.value = savedUser.name;
-                        this.elements.p1Date.value = savedUser.date;
+                        this.elements.p1Date.value = this.formatDateForDisplay(savedUser.date);
                         this.elements.welcomeBack.innerHTML = `Heureux de vous revoir, ${savedUser.name.split(' ')[0]} !`;
                         this.elements.welcomeBack.classList.remove('hidden');
                         this.displayThemeResults(savedUser.name, savedUser.date, true);
@@ -309,6 +297,31 @@
 
                     this.elements.modalCloseBtn.onclick = () => this.elements.glossaryModal.style.display = "none";
                     window.onclick = (event) => { if (event.target == this.elements.glossaryModal) this.elements.glossaryModal.style.display = "none"; };
+                },
+
+                parseAndValidateDate(dateString) {
+                    const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+                    if (!regex.test(dateString)) return null;
+                    const [, day, month, year] = dateString.match(regex);
+                    const date = new Date(`${year}-${month}-${day}T00:00:00`);
+                    if (date.getFullYear() != year || (date.getMonth() + 1) != month || date.getDate() != day) {
+                        return null;
+                    }
+                    return `${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
+                },
+
+                formatDateForDisplay(dateString) {
+                    if (!dateString) return '';
+                    const [year, month, day] = dateString.split('-');
+                    return `${day}/${month}/${year}`;
+                },
+                
+                formatDateInput(e) {
+                    let input = e.target;
+                    let value = input.value.replace(/\D/g, '');
+                    if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
+                    if (value.length > 5) value = value.slice(0, 5) + '/' + value.slice(5, 9);
+                    input.value = value;
                 },
 
                 toggleView(view) {
@@ -321,22 +334,28 @@
 
                 handleThemeSubmit() {
                     const fullName = this.elements.nameInput.value;
-                    const birthDate = this.elements.dateInput.value;
-                    if (!fullName || !birthDate) { alert("Veuillez remplir tous les champs."); return; }
+                    const birthDate = this.parseAndValidateDate(this.elements.dateInput.value);
+                    if (!fullName || !birthDate) {
+                        alert("Veuillez remplir tous les champs, avec une date valide au format JJ/MM/AAAA.");
+                        return;
+                    }
                     localStorage.setItem('numerologyUser', JSON.stringify({ name: fullName, date: birthDate }));
                     this.displayThemeResults(fullName, birthDate, false);
                     this.elements.p1Name.value = fullName;
-                    this.elements.p1Date.value = birthDate;
+                    this.elements.p1Date.value = this.formatDateForDisplay(birthDate);
                 },
                 
                 handleCompatibilitySubmit(e){
-                    const p1Name = this.elements.p1Name.value, p1Date = this.elements.p1Date.value;
-                    const p2Name = this.elements.p2Name.value, p2Date = this.elements.p2Date.value;
-                    if(!p1Name || !p1Date || !p2Name || !p2Date) { alert("Veuillez remplir les informations des deux personnes."); return; }
-                    
+                    const p1Name = this.elements.p1Name.value;
+                    const p1Date = this.parseAndValidateDate(this.elements.p1Date.value);
+                    const p2Name = this.elements.p2Name.value;
+                    const p2Date = this.parseAndValidateDate(this.elements.p2Date.value);
+                    if(!p1Name || !p1Date || !p2Name || !p2Date) {
+                        alert("Veuillez remplir les informations des deux personnes, avec des dates valides au format JJ/MM/AAAA.");
+                        return;
+                    }
                     const p1Theme = calculator.getTheme(p1Name, p1Date);
                     const p2Theme = calculator.getTheme(p2Name, p2Date);
-                    
                     this.displayCompatibilityResults(p1Theme, p2Theme);
                     e.target.querySelector('button').scrollIntoView({ behavior: 'smooth', block: 'end' });
                 },
@@ -374,7 +393,9 @@
                     const card = document.createElement('div');
                     card.className = 'card result-card';
                     let karmicHTML = '';
-                    if(resultData.result.karmicDebt) { karmicHTML = `<div class="karmic-warning">⚠️ <strong>Défi Karmique ${resultData.result.karmicDebt} :</strong> Ce nombre indique un défi particulier lié à ${data.karmicDebtsMap[resultData.result.karmicDebt]}.</div>`; }
+                    if(resultData.result.karmicDebt) {
+                        karmicHTML = `<div class="karmic-warning">⚠️ <strong>Défi Karmique ${resultData.result.karmicDebt} :</strong> Ce nombre indique un défi particulier lié à ${data.karmicDebtsMap[resultData.result.karmicDebt]}.</div>`;
+                    }
                     card.innerHTML = `<h2><span class="number-circle" data-number="${resultData.result.value}">${resultData.result.value}</span>${title}</h2><p class="description">${resultData.description}</p><p>${interpretationText}</p>${karmicHTML}<details><summary>Voir le calcul</summary><div class="calculation-details" style="font-size:0.9em; opacity:0.8; padding-top:10px;">${resultData.result.details}</div></details>`;
                     card.querySelector('.number-circle').addEventListener('click', (e) => this.openGlossaryModal(e.target.dataset.number));
                     return card;
@@ -389,37 +410,28 @@
                     const lpText = data.interpretations.cheminDeVie[lp]?.match(/<strong>(.*?) :<\/strong>/)[1] || "inconnu";
                     const expText = data.interpretations.expression[exp]?.match(/<strong>(.*?) :<\/strong>/)[1] || "inconnu";
                     let summaryText = `Votre <strong>Chemin de Vie ${lp}</strong> (votre mission) vous invite à devenir <strong>${lpText}</strong>. Pour y parvenir, vous disposez des dons de votre <strong>Nombre d'Expression ${exp}</strong> (vos outils), qui vous définit comme <strong>${expText}</strong>.`;
-                    if (lp === exp || (lp === 11 && exp === 2) || (lp === 22 && exp === 4) || (lp === 33 && exp === 6)) { summaryText += "<br><br>✨ <strong>Synergie Puissante :</strong> Votre mission et vos talents sont en parfaite harmonie, ce qui vous donne une grande force et une clarté d'objectif."; } 
-                    else { summaryText += "<br><br>💡 <strong>Dynamique de Croissance :</strong> Vos talents et votre mission sont différents, créant une dynamique unique qui vous pousse à développer de nouvelles facettes de votre personnalité."; }
+                    if (lp === exp || (lp === 11 && exp === 2) || (lp === 22 && exp === 4) || (lp === 33 && exp === 6)) {
+                        summaryText += "<br><br>✨ <strong>Synergie Puissante :</strong> Votre mission et vos talents sont en parfaite harmonie, ce qui vous donne une grande force et une clarté d'objectif.";
+                    } else {
+                        summaryText += "<br><br>💡 <strong>Dynamique de Croissance :</strong> Vos talents et votre mission sont différents, créant une dynamique unique qui vous pousse à développer de nouvelles facettes de votre personnalité.";
+                    }
                     this.elements.summaryContainer.innerHTML = `<div class="card summary-card" style="border-left-color: var(--summary-border);"><h2>Synthèse Stratégique</h2><p>${summaryText}</p></div>`;
                 },
 
                 displayEnergyChart(presenceData) {
                     const analysis = this.generateEnergyAnalysis(presenceData);
                     const container = this.elements.energyContainer;
-                    const chartWidth = 400;
-                    const chartHeight = 170;
-                    const barWidth = 30;
-                    const barMargin = 15;
+                    const chartWidth = 400; const chartHeight = 170;
+                    const barWidth = 30; const barMargin = 15;
                     let maxPresence = Math.max(...Object.values(presenceData));
                     if (maxPresence === 0) maxPresence = 1;
-
                     let svgContent = `<svg width="100%" viewBox="0 0 ${chartWidth} ${chartHeight}" preserveAspectRatio="xMidYMid meet">`;
-
                     Object.entries(presenceData).forEach(([num, count], index) => {
-                        const barHeight = (count / maxPresence) * (chartHeight - 30); // Keep space for label
+                        const barHeight = (count / maxPresence) * (chartHeight - 30);
                         const x = index * (barWidth + barMargin);
-                        const y = chartHeight - barHeight - 20; // Y starts from top
-
-                        svgContent += `
-                            <g transform="translate(${x}, 0)">
-                                <rect x="0" y="${y}" width="${barWidth}" height="${barHeight}" fill="var(--secondary-color)" rx="3">
-                                    <title>${data.energyKeywords[num]} (x${count})</title>
-                                </rect>
-                                <text x="${barWidth / 2}" y="${chartHeight - 5}" font-family="Poppins" font-size="12" fill="var(--text-color)" text-anchor="middle">${num}</text>
-                            </g>`;
+                        const y = chartHeight - barHeight - 20;
+                        svgContent += `<g transform="translate(${x}, 0)"><rect x="0" y="${y}" width="${barWidth}" height="${barHeight}" fill="var(--secondary-color)" rx="3"><title>${data.energyKeywords[num]} (x${count})</title></rect><text x="${barWidth / 2}" y="${chartHeight - 5}" font-family="Poppins" font-size="12" fill="var(--text-color)" text-anchor="middle">${num}</text></g>`;
                     });
-
                     svgContent += `</svg>`;
                     container.innerHTML = `<div class="card chart-card"><h2 style="font-size: 1.5em;">📊 Présence Énergétique du Nom</h2><p class="description">Ce graphique montre les énergies innées dans votre nom. Une barre haute indique un talent naturel, une barre basse une énergie à développer consciemment.</p><div class="energy-chart-svg-container">${svgContent}</div>${analysis}</div>`;
                 },
@@ -469,12 +481,7 @@
                         const typeText = { harmony: 'Harmonie', challenge: 'Défi', neutral: 'Neutre' }[type];
                         const card = document.createElement('div');
                         card.className = `card ${type}`;
-                        card.innerHTML = `
-                            <h2 style="color: var(--${type}-color);">${typeText} - ${aspect.title}</h2>
-                            <p><strong>${p1.firstName} (${aspect.val1}) & ${p2.firstName} (${aspect.val2})</strong></p>
-                            <p><em>${aspect.desc}</em></p>
-                            <p>${data.compatibility.summary[type]}</p>
-                        `;
+                        card.innerHTML = `<h2 style="color: var(--${type}-color);">${typeText} - ${aspect.title}</h2><p><strong>${p1.firstName} (${aspect.val1}) & ${p2.firstName} (${aspect.val2})</strong></p><p><em>${aspect.desc}</em></p><p>${data.compatibility.summary[type]}</p>`;
                         container.appendChild(card);
                     });
                     container.classList.remove('hidden');
@@ -509,12 +516,7 @@
                     ctx.font = 'bold 32px Lora';
                     ctx.textAlign = 'center';
                     ctx.fillText(theme.firstName, canvas.width / 2, 80);
-                    const numbers = [
-                        { label: "Chemin de Vie", value: theme.lifePath.value },
-                        { label: "Expression", value: theme.expression.value },
-                        { label: "Âme", value: theme.soul.value },
-                        { label: "Personnalité", value: theme.personality.value }
-                    ];
+                    const numbers = [ { label: "Chemin de Vie", value: theme.lifePath.value }, { label: "Expression", value: theme.expression.value }, { label: "Âme", value: theme.soul.value }, { label: "Personnalité", value: theme.personality.value } ];
                     ctx.font = '22px Poppins';
                     numbers.forEach((num, index) => {
                         const y = 160 + index * 80;
