@@ -47,8 +47,16 @@
         .card { opacity: 0; background-color: var(--card-bg); padding: 25px; margin-bottom: 25px; border-radius: var(--border-radius); border-left: 6px solid var(--secondary-color); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card.fade-in { animation: fadeIn 0.5s ease-out forwards; }
         h2 { margin-top: 0; margin-bottom: 15px; color: var(--primary-color); display: flex; align-items: center; font-family: 'Lora', serif; font-size: 1.8em; }
-        .number-circle { flex-shrink: 0; display: inline-flex; justify-content: center; align-items: center; width: 50px; height: 50px; background-color: var(--secondary-color); color: white; border-radius: 50%; font-size: 1.5em; font-weight: 600; margin-right: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; transition: transform 0.2s; padding: 5px; box-sizing: content-box;}
+        .number-circle {
+            flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            width: 60px; height: 60px; background-color: var(--secondary-color); color: white; border-radius: 50%;
+            font-weight: 600; margin-right: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer; transition: transform 0.2s; padding: 5px; box-sizing: border-box; font-size: 1.8em;
+        }
         .number-circle:hover { transform: scale(1.1); }
+        .number-circle .master-part { font-size: 0.7em; line-height: 1; font-weight: 700; }
+        .number-circle .separator { width: 60%; margin: 1px 0; border: none; border-top: 2px solid rgba(255, 255, 255, 0.6); }
+        .number-circle .base-part { font-size: 0.6em; line-height: 1; opacity: 0.9; }
         .daily-vibration-card { border: none; background: var(--daily-vibration-bg); color: #fff; }
         .daily-vibration-card h2, .daily-vibration-card .description, body.dark-mode .daily-vibration-card p { color: #fff; }
         .karmic-warning { background-color: var(--karmic-bg); border: 1px solid var(--karmic-border); border-radius: var(--border-radius); padding: 15px; margin-top: 20px; color: color-mix(in srgb, var(--karmic-border) 80%, #000 20%);}
@@ -317,9 +325,14 @@
                     };
                 },
                 
-                formatMasterNumberDisplay(result) {
+                formatNumberForDisplay(result) {
+                    if (result && result.baseValue) { return `${result.value}/${result.baseValue}`; }
+                    return result ? result.value : '';
+                },
+
+                generateCircleHTML(result) {
                     if (result && result.baseValue) {
-                        return `${result.value}/${result.baseValue}`;
+                        return `<span class="master-part">${result.value}</span><hr class="separator"><span class="base-part">${result.baseValue}</span>`;
                     }
                     return result ? result.value : '';
                 },
@@ -387,7 +400,7 @@
                     const interpretationText = data.interpretations[resultData.key]?.[resultData.result.value] || "Interprétation non disponible.";
                     const card = document.createElement('div');
                     card.className = 'card result-card';
-                    const displayNumber = this.formatMasterNumberDisplay(resultData.result);
+                    const circleHTML = this.generateCircleHTML(resultData.result);
                     let karmicHTML = '';
                     if(resultData.result.karmicDebt) {
                         karmicHTML = `<div class="karmic-warning">⚠️ <strong>Défi Karmique ${resultData.result.karmicDebt} :</strong> Ce nombre indique un défi spécifique, un 'frein' à transformer en force, lié à ${data.karmicDebtsMap[resultData.result.karmicDebt]}.</div>`;
@@ -396,20 +409,20 @@
                     if(title === 'Nombre de l\'Âme') {
                         methodologyNoteHTML = `<p class="methodology-note">ℹ️ Calculé avec les voyelles du nom complet (A, E, I, O, U, Y). Voir "Notre Méthodologie" en bas de page pour plus de détails.</p>`;
                     }
-                    card.innerHTML = `<h2><span class="number-circle" data-number="${resultData.result.value}">${displayNumber}</span>${title}</h2><p class="description">${resultData.description}</p><p>${interpretationText}</p>${karmicHTML}<details><summary>Voir le calcul</summary><div class="calculation-details" style="font-size:0.9em; opacity:0.8; padding-top:10px;">${resultData.result.details}</div></details>${methodologyNoteHTML}`;
-                    card.querySelector('.number-circle').addEventListener('click', (e) => this.openGlossaryModal(e.target.dataset.number));
+                    card.innerHTML = `<h2><span class="number-circle" data-number="${resultData.result.value}">${circleHTML}</span>${title}</h2><p class="description">${resultData.description}</p><p>${interpretationText}</p>${karmicHTML}<details><summary>Voir le calcul</summary><div class="calculation-details" style="font-size:0.9em; opacity:0.8; padding-top:10px;">${resultData.result.details}</div></details>${methodologyNoteHTML}`;
+                    card.querySelector('.number-circle').addEventListener('click', (e) => this.openGlossaryModal(e.currentTarget.dataset.number));
                     return card;
                 },
 
                 displayDailyVibration(vibration) {
-                    const displayNumber = this.formatMasterNumberDisplay(vibration);
-                    this.elements.dailyVibrationContainer.innerHTML = `<div class="card daily-vibration-card"><h2 class="fade-in"><span class="number-circle" data-number="${vibration.value}">${displayNumber}</span>Votre Vibration du Jour</h2><p class="description fade-in">${data.dailyVibration[vibration.value] || "Journée d'énergie intense et de potentiel élevé."}</p></div>`;
-                    this.elements.dailyVibrationContainer.querySelector('.number-circle').addEventListener('click', (e) => this.openGlossaryModal(e.target.dataset.number));
+                    const circleHTML = this.generateCircleHTML(vibration);
+                    this.elements.dailyVibrationContainer.innerHTML = `<div class="card daily-vibration-card"><h2 class="fade-in"><span class="number-circle" data-number="${vibration.value}">${circleHTML}</span>Votre Vibration du Jour</h2><p class="description fade-in">${data.dailyVibration[vibration.value] || "Journée d'énergie intense et de potentiel élevé."}</p></div>`;
+                    this.elements.dailyVibrationContainer.querySelector('.number-circle').addEventListener('click', (e) => this.openGlossaryModal(e.currentTarget.dataset.number));
                 },
                 
                 displaySummary(lifePath, expression) {
-                    const lpDisplay = this.formatMasterNumberDisplay(lifePath);
-                    const expDisplay = this.formatMasterNumberDisplay(expression);
+                    const lpDisplay = this.formatNumberForDisplay(lifePath);
+                    const expDisplay = this.formatNumberForDisplay(expression);
                     const lpText = data.interpretations.cheminDeVie[lifePath.value]?.match(/<strong>(.*?) :<\/strong>/)[1] || "inconnu";
                     const expText = data.interpretations.expression[expression.value]?.match(/<strong>(.*?) :<\/strong>/)[1] || "inconnu";
                     let summaryText = `La clé de votre épanouissement réside dans la relation entre votre <strong>mission de vie (Chemin de Vie ${lpDisplay})</strong> et vos <strong>outils innés (Nombre d'Expression ${expDisplay})</strong>.<br><br>Votre mission est de devenir <strong>${lpText}</strong>. Pour y parvenir, vous disposez naturellement des talents d'un(e) <strong>${expText}</strong>. L'art consiste à utiliser consciemment vos outils pour avancer sur votre chemin.`;
@@ -484,8 +497,8 @@
                         const typeText = { harmony: 'Harmonie', challenge: 'Défi', neutral: 'Neutre' }[type];
                         const card = document.createElement('div');
                         card.className = `card ${type}`;
-                        const p1Display = this.formatMasterNumberDisplay(aspect.res1);
-                        const p2Display = this.formatMasterNumberDisplay(aspect.res2);
+                        const p1Display = this.formatNumberForDisplay(aspect.res1);
+                        const p2Display = this.formatNumberForDisplay(aspect.res2);
                         card.innerHTML = `<h2 style="color: var(--${type}-color);">${typeText} - ${aspect.title}</h2><p><strong>${p1.firstName} (${p1Display}) & ${p2.firstName} (${p2Display})</strong></p><p><em>${aspect.desc}</em></p><p>${data.compatibility.summary[type]}</p>`;
                         container.appendChild(card);
                     });
@@ -527,7 +540,7 @@
                     ctx.font = '22px Poppins';
                     numbers.forEach((num, index) => {
                         const y = 160 + index * 80;
-                        const displayNumber = this.formatMasterNumberDisplay(num.result);
+                        const displayNumber = this.formatNumberForDisplay(num.result);
                         ctx.textAlign = 'left'; ctx.fillText(`${num.label} :`, 100, y);
                         ctx.textAlign = 'right'; ctx.font = 'bold 38px Lora';
                         ctx.fillText(displayNumber, 400, y + 10);
@@ -561,7 +574,7 @@
                     this.elements.aiExportBtn.onclick = () => {
                         let resultsForAI = '';
                         resultsMap.forEach((data, title) => {
-                            const displayNumber = this.formatMasterNumberDisplay(data.result);
+                            const displayNumber = this.formatNumberForDisplay(data.result);
                             resultsForAI += `${title}: ${displayNumber}${data.result.karmicDebt ? ` (Dette Karmique ${data.result.karmicDebt})` : ''}\n`;
                         });
                         const aiPrompt = `# CONTEXTE\nAgis comme un expert en numérologie stratégique. Analyse le thème suivant.\n\n# THÈME NUMÉROLOGIQUE\n${resultsForAI.trim()}\n\n# CYCLES DE VIE\n${JSON.stringify(theme.lifeCycles, null, 2)}\n\n# ÉNERGIES DU NOM (Présence des nombres de 1 à 9)\n${JSON.stringify(theme.energyPresence, null, 2)}\n\n# TA MISSION\nEn te basant sur TOUTES ces données, rédige une analyse complète et bienveillante. Ta valeur est de TISSER DES LIENS entre les nombres pour révéler les synergies, les défis et le potentiel global. Prends en compte la vibration complète des maîtres nombres (ex: la dualité travail/vision du 22/4).\n\nStructure ta réponse ainsi :\n1. **Synthèse Stratégique (Le Duo Clé) :** Explique la dynamique centrale entre le Chemin de Vie (la mission) et le Nombre d'Expression (les outils). Comment ces deux nombres interagissent-ils ? Est-ce une synergie ou un défi de croissance ?\n2. **Forces Principales & Potentiel :** Identifie 2-3 associations positives entre les différents nombres (ex: Âme et Personnalité alignées, énergies dominantes du nom qui soutiennent le Chemin de Vie). Explique comment exploiter ce potentiel.\n3. **Axes de Croissance (Défis & Freins) :** Analyse les tensions, les dettes karmiques et les énergies manquantes du nom. Donne un conseil concret pour transformer chaque défi en une opportunité de croissance.\n4. **Feuille de Route pour la Période Actuelle :** En se basant sur le cycle de vie actuel (considérer que nous sommes en ${new Date().getFullYear()}), quel est le principal conseil pour la période que la personne traverse ?\n5. **Conseil Final :** Résume le potentiel unique de cette personne en une phrase puissante et donne un conseil final actionnable.`;
