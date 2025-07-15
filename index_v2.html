@@ -47,13 +47,24 @@
         .card { opacity: 0; background-color: var(--card-bg); padding: 25px; margin-bottom: 25px; border-radius: var(--border-radius); border-left: 6px solid var(--secondary-color); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card.fade-in { animation: fadeIn 0.5s ease-out forwards; }
         h2 { margin-top: 0; margin-bottom: 15px; color: var(--primary-color); display: flex; align-items: center; font-family: 'Lora', serif; font-size: 1.8em; }
-        .number-circle { flex-shrink: 0; display: inline-flex; justify-content: center; align-items: center; width: 50px; height: 50px; background-color: var(--secondary-color); color: white; border-radius: 50%; font-size: 1.6em; font-weight: 600; margin-right: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; transition: transform 0.2s; }
+        .number-circle {
+            flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            width: 70px; height: 70px; background-color: var(--secondary-color); color: white; border-radius: 50%;
+            font-weight: 700; margin-right: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer; transition: transform 0.2s; box-sizing: border-box;
+            font-size: 2.5em; /* Default for single numbers */
+        }
         .number-circle:hover { transform: scale(1.1); }
+        .number-circle .master-part { font-size: 1.7rem; line-height: 1.1; }
+        .number-circle .separator { width: 65%; margin: 2px 0; border: none; border-top: 2px solid rgba(255, 255, 255, 0.75); }
+        .number-circle .base-part { font-size: 1.4rem; line-height: 1; opacity: 0.9; }
         .daily-vibration-card { border: none; background: var(--daily-vibration-bg); color: #fff; }
         .daily-vibration-card h2, .daily-vibration-card .description, body.dark-mode .daily-vibration-card p { color: #fff; }
         .karmic-warning { background-color: var(--karmic-bg); border: 1px solid var(--karmic-border); border-radius: var(--border-radius); padding: 15px; margin-top: 20px; color: color-mix(in srgb, var(--karmic-border) 80%, #000 20%);}
+        .methodology-note { font-size: 0.8em; opacity: 0.7; margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee; }
         .action-buttons { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; }
         .action-buttons button { flex: 1 1 200px; }
+        .ai-prompt-description { font-size: 0.85em; opacity: 0.8; margin: 8px 0 0 0; text-align: center; color: var(--text-color); width: 100%; }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); animation: fadeIn 0.3s; }
         .modal-content { background-color: var(--card-bg); margin: 10% auto; padding: 30px; border-top: 5px solid var(--primary-color); width: 80%; max-width: 600px; border-radius: var(--border-radius); position: relative; }
         .close-button { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
@@ -74,6 +85,7 @@
         .life-cycles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .cycle-card { padding: 15px; border-radius: var(--border-radius); background-color: color-mix(in srgb, var(--primary-color) 5%, transparent); text-align: center; }
         .cycle-card h3 { font-family: 'Lora', serif; color: var(--primary-color); margin-top: 0; }
+        footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -94,7 +106,7 @@
             <div id="theme-content" class="tab-content active">
                 <div id="welcome-back" class="hidden"></div>
                 <form id="numerology-form">
-                    <div class="input-group"><label for="full-name">Vos Noms & Prénoms (naissance)</label><input type="text" id="full-name" required></div>
+                    <div class="input-group"><label for="full-name">Vos Noms & Prénoms (de naissance)</label><input type="text" id="full-name" required></div>
                     <div class="input-group">
                         <label for="birth-date">Votre Date de naissance</label>
                         <input type="text" id="birth-date" required placeholder="JJ/MM/AAAA" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}">
@@ -122,52 +134,64 @@
                 <form id="compatibility-form">
                     <h4>Personne 1 (Vous)</h4>
                     <div class="input-group"><label for="p1-full-name">Noms & Prénoms</label><input type="text" id="p1-full-name" required></div>
-                    <div class="input-group">
-                        <label for="p1-birth-date">Date de naissance</label>
-                        <input type="text" id="p1-birth-date" required placeholder="JJ/MM/AAAA" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}">
-                    </div>
+                    <div class="input-group"><label for="p1-birth-date">Date de naissance</label><input type="text" id="p1-birth-date" required placeholder="JJ/MM/AAAA" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}"></div>
                     <hr>
                     <h4>Personne 2</h4>
                     <div class="input-group"><label for="p2-full-name">Noms & Prénoms</label><input type="text" id="p2-full-name" required></div>
-                    <div class="input-group">
-                        <label for="p2-birth-date">Date de naissance</label>
-                        <input type="text" id="p2-birth-date" required placeholder="JJ/MM/AAAA" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}">
-                    </div>
+                    <div class="input-group"><label for="p2-birth-date">Date de naissance</label><input type="text" id="p2-birth-date" required placeholder="JJ/MM/AAAA" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}"></div>
                     <button type="submit">Analyser la Compatibilité</button>
                 </form>
                 <div id="compatibility-results" class="hidden"></div>
             </div>
         </main>
-        <footer style="text-align:center; font-size: 0.9em; opacity: 0.7; padding: 20px 0;"><p>Application créée pour la découverte de soi. Ne remplace pas un conseil professionnel.</p></footer>
+        <footer style="text-align:center; font-size: 0.9em; opacity: 0.7; padding: 20px 0;">
+            <p>Application créée pour la découverte de soi. Ne remplace pas un conseil professionnel.</p>
+            <p><a id="methodology-link">Notre Méthodologie de Calcul</a></p>
+        </footer>
     </div>
+    
     <div id="glossary-modal" class="modal"><div class="modal-content"><span id="modal-close-btn" class="close-button">×</span><div id="modal-body"></div></div></div>
+    <div id="methodology-modal" class="modal"><div class="modal-content"><span id="methodology-close-btn" class="close-button">×</span><div id="methodology-modal-body"></div></div></div>
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const data = {
                 letterValues: { 'A':1,'J':1,'S':1, 'B':2,'K':2,'T':2, 'C':3,'L':3,'U':3, 'D':4,'M':4,'V':4, 'E':5,'N':5,'W':5, 'F':6,'O':6,'X':6, 'G':7,'P':7,'Y':7, 'H':8,'Q':8,'Z':8, 'I':9,'R':9 },
                 vowels: ['A', 'E', 'I', 'O', 'U', 'Y'],
+                masterNumbers: [11, 22, 33],
                 karmicDebtsMap: { 13: "la paresse et le travail", 14: "les abus des sens et l'instabilité", 16: "l'orgueil et la destruction de l'ego", 19: "l'égoïsme et l'abus de pouvoir" },
                 energyKeywords: { 1: "Leader", 2: "Diplomate", 3: "Créatif", 4: "Bâtisseur", 5: "Aventurier", 6: "Responsable", 7: "Sage", 8: "Puissant", 9: "Humaniste", 11: "Inspiré", 22: "Grand Bâtisseur", 33: "Guide" },
-                interpretations: {
-                    cheminDeVie: { 1: "<strong>Le Leader :</strong> Votre mission est d'apprendre l'indépendance et l'innovation. Le défi est de croire en vos propres idées.", 2: "<strong>Le Diplomate :</strong> Votre chemin est celui de la coopération et de l'harmonie. Le défi est de trouver votre propre voix.", 3: "<strong>Le Communicant :</strong> Votre mission est d'inspirer par la créativité. Le défi est de ne pas disperser votre énergie.", 4: "<strong>Le Bâtisseur :</strong> Votre mission est de construire et d'apporter de la stabilité. Le défi est d'accepter la flexibilité.", 5: "<strong>L'Aventurier :</strong> Votre chemin est celui du changement et de la liberté. Le défi est de trouver un équilibre entre liberté et discipline.", 6: "<strong>Le Responsable :</strong> Votre mission est liée au service et à la famille. Le défi est de ne pas tomber dans le sacrifice.", 7: "<strong>Le Sage :</strong> Votre chemin est celui de la connaissance et de l'introspection. Le défi est de ne pas vous isoler du monde.", 8: "<strong>Le Maître :</strong> Votre mission est de maîtriser le monde matériel et le pouvoir. Le défi est d'utiliser ce pouvoir avec sagesse et générosité.", 9: "<strong>L'Humaniste :</strong> Votre chemin est celui de l'altruisme et de la compassion. Le défi est d'apprendre à lâcher prise.", 11: "<strong>L'Inspiré :</strong> Maître nombre. Un chemin de grande intuition et de révélation. Le défi est de gérer une grande tension nerveuse et de vivre à la hauteur de vos idéaux.", 22: "<strong>Le Grand Bâtisseur :</strong> Maître nombre. La capacité de transformer les rêves les plus élevés en réalité. Le défi est immense et demande un travail et une éthique sans faille.", 33: "<strong>Le Guide Spirituel :</strong> Maître nombre. Un chemin de service et de guérison à grande échelle. Le défi est de gérer les responsabilités sans s'oublier." },
-                    expression: { 1: "<strong>Le Pionnier :</strong> Vos talents sont l'initiative et le leadership.", 2: "<strong>Le Partenaire :</strong> Vos dons sont la collaboration et la médiation.", 3: "<strong>L'Artiste Créatif :</strong> Votre potentiel s'exprime par la communication et la créativité.", 4: "<strong>L'Organisateur :</strong> Vous avez un talent pour la planification et le travail méticuleux.", 5: "<strong>Le Communicateur Charismatique :</strong> Vos talents sont la polyvalence et l'adaptabilité.", 6: "<strong>Le Conseiller Protecteur :</strong> Vous avez un don pour le conseil et la prise en charge.", 7: "<strong>Le Chercheur de Vérité :</strong> Vos talents sont l'analyse et la recherche.", 8: "<strong>Le Manager Ambitieux :</strong> Vous possédez un potentiel pour les affaires et la finance.", 9: "<strong>L'Idéaliste :</strong> Vos dons sont la compassion et une vision large des choses.", 11: "<strong>Le Visionnaire :</strong> Vous avez le potentiel d'inspirer les autres par des idées novatrices.", 22: "<strong>Le Maître d'Oeuvre :</strong> Vous pouvez gérer de grands projets qui servent l'humanité.", 33: "<strong>Le Grand Serviteur :</strong> Votre potentiel est dans l'enseignement et la guérison." },
-                    ame: { 1: "<strong>Désir d'Indépendance :</strong> Vous aspirez à diriger votre propre vie.", 2: "<strong>Désir d'Harmonie :</strong> Votre âme recherche l'amour, la paix et l'union.", 3: "<strong>Désir d'Expression :</strong> Vous avez un besoin vital de créer et de communiquer.", 4: "<strong>Désir de Stabilité :</strong> Vous recherchez la sécurité et un cadre solide.", 5: "<strong>Désir de Liberté :</strong> Votre âme a soif de changement et d'aventure.", 6: "<strong>Désir de Service :</strong> Vous êtes animé par le besoin de prendre soin des autres.", 7: "<strong>Désir de Connaissance :</strong> Vous avez un besoin de comprendre les mystères de la vie.", 8: "<strong>Désir de Maîtrise :</strong> Vous aspirez au succès et à la maîtrise du monde matériel.", 9: "<strong>Désir d'Universalité :</strong> Votre âme est tournée vers l'humanité et les grandes causes.", 11: "<strong>Désir de Révélation :</strong> Vous cherchez à vous connecter à une conscience supérieure.", 22: "<strong>Désir de Bâtir pour le Monde :</strong> Vous voulez laisser un héritage durable.", 33: "<strong>Désir de Guérir :</strong> Vous êtes motivé par une compassion profonde et le désir d'aider." },
-                    personnalite: { 1: "<strong>L'Image du Chef :</strong> Vous apparaissez comme une personne confiante et indépendante.", 2: "<strong>L'Image du Diplomate :</strong> Les autres vous voient comme quelqu'un de charmant et coopératif.", 3: "<strong>L'Image de l'Artiste Sociable :</strong> On vous perçoit comme quelqu'un de pétillant et communicatif.", 4: "<strong>L'Image du Pilier Fiable :</strong> Vous projetez une image de sérieux, de stabilité et de fiabilité.", 5: "<strong>L'Image de l'Aventurier :</strong> On vous perçoit comme une personne magnétique et adaptable.", 6: "<strong>L'Image du Parent Universel :</strong> Les autres vous voient comme une personne chaleureuse et bienveillante.", 7: "<strong>L'Image du Sage Mystérieux :</strong> On vous perçoit comme quelqu'un d'intelligent et de réservé.", 8: "<strong>L'Image de la Puissance :</strong> Vous projetez une image de force, d'ambition et de contrôle.", 9: "<strong>L'Image de l'Humaniste :</strong> On vous perçoit comme une personne tolérante et généreuse.", 11: "<strong>L'Image de l'Intuitif :</strong> Vous semblez connecté à une autre réalité.", 22: "<strong>L'Image du Bâtisseur :</strong> On perçoit votre potentiel à réaliser de grandes choses.", 33: "<strong>L'Image du Guide :</strong> Vous dégagez une aura de compassion et de sagesse." },
-                    nombreActif: { 1: "<strong>Action Directe :</strong> Votre prénom vous pousse à agir de manière directe et décisive.", 2: "<strong>Action Collaborative :</strong> Vous agissez de préférence en collaboration.", 3: "<strong>Action Créative :</strong> Votre manière d'agir est joyeuse et expressive.", 4: "<strong>Action Méthodique :</strong> Vous agissez de façon planifiée et persévérante.", 5: "<strong>Action Adaptable :</strong> Vous agissez de manière rapide et flexible.", 6: "<strong>Action Responsable :</strong> Vos actions sont motivées par le sens des responsabilités.", 7: "<strong>Action Réfléchie :</strong> Vous avez besoin d'analyser la situation avant de vous engager.", 8: "<strong>Action Ambitieuse :</strong> Votre mode d'action est puissant et orienté vers un objectif.", 9: "<strong>Action Altruiste :</strong> Vous agissez souvent pour une cause plus grande que vous.", 11: "<strong>Action Inspirée :</strong> Vous agissez selon votre intuition.", 22: "<strong>Action Constructive :</strong> Vous êtes poussé à agir pour des projets concrets.", 33: "<strong>Action de Service :</strong> Vos actions visent à guider les autres." }
+                methodologyText: {
+                    title: "Notre Approche & Méthodologie de Calcul",
+                    content: `<p>Cette application s'inspire de la <strong>numérologie stratégique</strong>, une approche moderne qui vise à fournir des clés de compréhension de soi actionnables. Voici les principes de calcul utilisés :</p>
+                    <ul>
+                        <li><strong>Réduction des nombres :</strong> Tous les nombres sont réduits à un seul chiffre (de 1 à 9), sauf les <strong>Maîtres Nombres 11, 22 et 33</strong>, qui conservent leur propre vibration. L'application affiche ces nombres avec leur base (ex: 22/4) pour une analyse complète.</li>
+                        <li><strong>Nombre de l'Âme (Élan Spirituel) :</strong> Il est calculé en additionnant la valeur de toutes les voyelles de vos noms et prénoms de naissance. Conformément à une convention répandue, la lettre <strong>'Y' est systématiquement considérée comme une voyelle</strong> dans nos calculs. Des écoles différentes peuvent la traiter comme une consonne dans certains cas, ce qui peut expliquer des variations de résultats.</li>
+                        <li><strong>Nombre de Personnalité (Moi Intime) :</strong> Il est obtenu par la somme des consonnes de vos noms et prénoms.</li>
+                        <li><strong>Nombre d'Expression (Potentiel) :</strong> Il est la somme de toutes les lettres (voyelles + consonnes).</li>
+                        <li><strong>Dettes Karmiques :</strong> Nous identifions les dettes karmiques (13, 14, 16, 19) lorsqu'elles apparaissent comme résultat intermédiaire avant la réduction finale dans les nombres principaux. Elles représentent des défis spécifiques à intégrer.</li>
+                    </ul>
+                    <p>La numérologie est un outil de réflexion. Différentes approches (évolutive, karmique, etc.) peuvent utiliser des variantes de calcul. Cet outil vous offre une base solide issue d'une méthode reconnue pour commencer votre exploration.</p>`
                 },
-                dailyVibration: { 1:"<strong>Initiative & Action :</strong> Journée idéale pour démarrer de nouveaux projets et affirmer votre indépendance. Prenez les devants !", 2:"<strong>Patience & Diplomatie :</strong> Ralentissez. C'est un jour pour écouter, collaborer et faire preuve de tact. Favorisez les partenariats.", 3:"<strong>Créativité & Communication :</strong> Exprimez-vous ! Une excellente journée pour socialiser, rire, créer et partager vos idées avec optimisme.", 4:"<strong>Travail & Organisation :</strong> Concentrez-vous sur les détails et le travail méthodique. Journée parfaite pour ranger, planifier et construire des bases solides.", 5:"<strong>Changement & Aventure :</strong> Attendez-vous à l'inattendu. Soyez flexible, ouvert aux nouvelles expériences et prêt à bouger. Évitez la routine.", 6:"<strong>Harmonie & Responsabilités :</strong> Le foyer et les relations sont au centre. Un jour pour prendre soin de vos proches, embellir votre environnement et assumer vos responsabilités.", 7:"<strong>Introspection & Réflexion :</strong> Prenez du temps pour vous. C'est un jour pour analyser, méditer, et chercher des réponses à l'intérieur. Ne forcez rien.", 8:"<strong>Ambition & Pouvoir :</strong> Concentrez-vous sur vos finances et votre carrière. Journée propice aux décisions importantes, aux négociations et à l'affirmation de votre autorité.", 9:"<strong>Bilan & Altruisme :</strong> C'est un jour pour finaliser, pardonner et lâcher-prise. Aidez les autres et terminez ce qui est en cours avant de commencer du neuf.", 11: "<strong>Intuition & Révélation :</strong> Une journée de grande sensibilité. Fiez-vous à votre intuition, elle est particulièrement forte. Les tensions sont possibles, cherchez l'harmonie comme pour un jour 2.", 22: "<strong>Construction & Vision :</strong> Potentiel de réaliser quelque chose de grand. C'est un jour 4 à une échelle supérieure. Rêvez grand, mais ancrez vos actions dans le concret.", 33: "<strong>Compassion & Guérison :</strong> Journée de service et d'amour universel. Une énergie de jour 6 amplifiée. Soyez une source d'inspiration et de réconfort pour les autres." },
+                interpretations: {
+                    cheminDeVie: { 1: "<strong>Le Leader :</strong> Votre mission est d'apprendre l'indépendance et l'innovation. Le défi est de croire en vos propres idées pour réaliser votre plein potentiel.", 2: "<strong>Le Diplomate :</strong> Votre chemin est celui de la coopération et de l'harmonie. Votre potentiel se libère en trouvant votre propre voix sans dépendre de l'approbation des autres.", 3: "<strong>Le Communicant :</strong> Votre mission est d'inspirer par la créativité. Le défi est de ne pas disperser votre énergie pour transformer votre potentiel en réalisations concrètes.", 4: "<strong>Le Bâtisseur :</strong> Votre mission est de construire et d'apporter de la stabilité. Votre principal axe de croissance est d'accepter la flexibilité pour éviter les blocages.", 5: "<strong>L'Aventurier :</strong> Votre chemin est celui du changement et de la liberté. Le défi est de trouver un équilibre entre liberté et discipline pour ne pas vous éparpiller.", 6: "<strong>Le Responsable :</strong> Votre mission est liée au service et à la famille. Le défi est de trouver un équilibre entre donner et recevoir, pour ne pas tomber dans le sacrifice.", 7: "<strong>Le Sage :</strong> Votre chemin est celui de la connaissance et de l'introspection. Pour réaliser votre potentiel, le défi est de partager votre sagesse sans vous isoler du monde.", 8: "<strong>Le Maître :</strong> Votre mission est de maîtriser le monde matériel et le pouvoir. Le défi est d'utiliser ce pouvoir avec sagesse et générosité pour un impact positif.", 9: "<strong>L'Humaniste :</strong> Votre chemin est celui de l'altruisme et de la compassion. Le principal défi pour accomplir votre potentiel est d'apprendre à lâcher prise.", 11: "<strong>L'Inspiré (11/2) :</strong> Maître nombre. Un chemin de grande intuition. Le défi est de gérer une forte tension intérieure (propre au 11) et de trouver le courage d'incarner vos idéaux élevés, tout en apprenant la diplomatie du 2.", 22: "<strong>Le Grand Bâtisseur (22/4) :</strong> Maître nombre. La capacité de transformer les rêves en réalité. Les défis sont immenses, demandant l'éthique du 22 et le travail acharné du 4 pour éviter les freins de la pression.", 33: "<strong>Le Guide Spirituel (33/6) :</strong> Maître nombre. Un chemin de service et de guérison. Le défi est de gérer ces lourdes responsabilités (33) avec l'amour et l'équilibre du 6, sans vous oublier." },
+                    expression: { 1: "<strong>Le Pionnier :</strong> Vos talents sont l'initiative et le leadership. Ce sont vos outils pour agir.", 2: "<strong>Le Partenaire :</strong> Vos dons sont la collaboration et la médiation. Utilisez-les pour créer des liens.", 3: "<strong>L'Artiste Créatif :</strong> Votre potentiel s'exprime par la communication et la créativité.", 4: "<strong>L'Organisateur :</strong> Vous avez un talent pour la planification et le travail méticuleux, créant des fondations solides.", 5: "<strong>Le Communicateur Charismatique :</strong> Vos talents sont la polyvalence et l'adaptabilité, des outils puissants pour le changement.", 6: "<strong>Le Conseiller Protecteur :</strong> Vous avez un don pour le conseil. C'est votre manière d'impacter le monde.", 7: "<strong>Le Chercheur de Vérité :</strong> Vos talents sont l'analyse et la recherche pour comprendre le monde.", 8: "<strong>Le Manager Ambitieux :</strong> Vous possédez un potentiel pour les affaires et la gestion de projets d'envergure.", 9: "<strong>L'Idéaliste :</strong> Vos dons sont la compassion et une vision large des choses.", 11: "<strong>Le Visionnaire (11/2) :</strong> Vous avez le potentiel d'inspirer les autres par des idées novatrices (11) avec une grande sensibilité (2).", 22: "<strong>Le Maître d'Oeuvre (22/4) :</strong> Vous pouvez gérer de grands projets (22) qui servent l'humanité avec une méthode concrète (4).", 33: "<strong>Le Grand Serviteur (33/6) :</strong> Votre potentiel est dans l'enseignement et la guérison (33) au service des autres (6)." },
+                    ame: { 1: "<strong>Désir d'Indépendance :</strong> Vous aspirez à diriger votre propre vie.", 2: "<strong>Désir d'Harmonie :</strong> Votre âme recherche l'amour, la paix et l'union.", 3: "<strong>Désir d'Expression :</strong> Vous avez un besoin vital de créer et de communiquer.", 4: "<strong>Désir de Stabilité :</strong> Vous recherchez la sécurité et un cadre solide.", 5: "<strong>Désir de Liberté :</strong> Votre âme a soif de changement et d'aventure.", 6: "<strong>Désir de Service :</strong> Vous êtes animé par le besoin de prendre soin des autres.", 7: "<strong>Désir de Connaissance :</strong> Vous avez un besoin de comprendre les mystères de la vie.", 8: "<strong>Désir de Maîtrise :</strong> Vous aspirez au succès et à la maîtrise du monde matériel.", 9: "<strong>Désir d'Universalité :</strong> Votre âme est tournée vers l'humanité et les grandes causes.", 11: "<strong>Désir de Révélation (11/2) :</strong> Vous cherchez à vous connecter à une conscience supérieure (11) et à partager en harmonie (2).", 22: "<strong>Désir de Bâtir pour le Monde (22/4) :</strong> Vous voulez laisser un héritage durable (22) et concret (4).", 33: "<strong>Désir de Guérir (33/6) :</strong> Vous êtes motivé par une compassion profonde (33) et le besoin de prendre soin (6)." },
+                    personnalite: { 1: "<strong>L'Image du Chef :</strong> Vous apparaissez comme une personne confiante et indépendante.", 2: "<strong>L'Image du Diplomate :</strong> Les autres vous voient comme quelqu'un de charmant et coopératif.", 3: "<strong>L'Image de l'Artiste Sociable :</strong> On vous perçoit comme quelqu'un de pétillant et communicatif.", 4: "<strong>L'Image du Pilier Fiable :</strong> Vous projetez une image de sérieux, de stabilité et de fiabilité.", 5: "<strong>L'Image de l'Aventurier :</strong> On vous perçoit comme une personne magnétique et adaptable.", 6: "<strong>L'Image du Parent Universel :</strong> Les autres vous voient comme une personne chaleureuse et bienveillante.", 7: "<strong>L'Image du Sage Mystérieux :</strong> On vous perçoit comme quelqu'un d'intelligent et de réservé.", 8: "<strong>L'Image de la Puissance :</strong> Vous projetez une image de force, d'ambition et de contrôle.", 9: "<strong>L'Image de l'Humaniste :</strong> On vous perçoit comme une personne tolérante et généreuse.", 11: "<strong>L'Image de l'Intuitif (11/2) :</strong> Vous semblez connecté à une autre réalité (11) tout en étant accessible (2).", 22: "<strong>L'Image du Bâtisseur (22/4) :</strong> On perçoit votre potentiel à réaliser de grandes choses (22) de manière crédible (4).", 33: "<strong>L'Image du Guide (33/6) :</strong> Vous dégagez une aura de compassion (33) et de bienveillance (6)." },
+                    nombreActif: { 1: "<strong>Action Directe :</strong> Votre prénom vous pousse à agir de manière directe et décisive.", 2: "<strong>Action Collaborative :</strong> Vous agissez de préférence en collaboration.", 3: "<strong>Action Créative :</strong> Votre manière d'agir est joyeuse et expressive.", 4: "<strong>Action Méthodique :</strong> Vous agissez de façon planifiée et persévérante.", 5: "<strong>Action Adaptable :</strong> Vous agissez de manière rapide et flexible.", 6: "<strong>Action Responsable :</strong> Vos actions sont motivées par le sens des responsabilités.", 7: "<strong>Action Réfléchie :</strong> Vous avez besoin d'analyser la situation avant de vous engager.", 8: "<strong>Action Ambitieuse :</strong> Votre mode d'action est puissant et orienté vers un objectif.", 9: "<strong>Action Altruiste :</strong> Vous agissez souvent pour une cause plus grande que vous.", 11: "<strong>Action Inspirée (11/2) :</strong> Vous agissez selon votre intuition (11).", 22: "<strong>Action Constructive (22/4) :</strong> Vous êtes poussé à agir pour des projets concrets (22 et 4).", 33: "<strong>Action de Service (33/6) :</strong> Vos actions visent à guider et aider les autres (33 et 6)." }
+                },
+                dailyVibration: { 1:"<strong>Initiative & Action :</strong> Journée idéale pour démarrer de nouveaux projets et affirmer votre indépendance. Prenez les devants !", 2:"<strong>Patience & Diplomatie :</strong> Ralentissez. C'est un jour pour écouter, collaborer et faire preuve de tact. Favorisez les partenariats.", 3:"<strong>Créativité & Communication :</strong> Exprimez-vous ! Une excellente journée pour socialiser, rire, créer et partager vos idées avec optimisme.", 4:"<strong>Travail & Organisation :</strong> Concentrez-vous sur les détails et le travail méthodique. Journée parfaite pour ranger, planifier et construire des bases solides.", 5:"<strong>Changement & Aventure :</strong> Attendez-vous à l'inattendu. Soyez flexible, ouvert aux nouvelles expériences et prêt à bouger. Évitez la routine.", 6:"<strong>Harmonie & Responsabilités :</strong> Le foyer et les relations sont au centre. Un jour pour prendre soin de vos proches, embellir votre environnement et assumer vos responsabilités.", 7:"<strong>Introspection & Réflexion :</strong> Prenez du temps pour vous. C'est un jour pour analyser, méditer, et chercher des réponses à l'intérieur. Ne forcez rien.", 8:"<strong>Ambition & Pouvoir :</strong> Concentrez-vous sur vos finances et votre carrière. Journée propice aux décisions importantes, aux négociations et à l'affirmation de votre autorité.", 9:"<strong>Bilan & Altruisme :</strong> C'est un jour pour finaliser, pardonner et lâcher-prise. Aidez les autres et terminez ce qui est en cours avant de commencer du neuf.", 11: "<strong>Intuition & Révélation (11/2) :</strong> Une journée de grande sensibilité. Fiez-vous à votre intuition (11), elle est particulièrement forte. Les tensions sont possibles, cherchez l'harmonie du 2.", 22: "<strong>Construction & Vision (22/4) :</strong> Potentiel de réaliser quelque chose de grand. C'est un jour 4 à une échelle supérieure. Rêvez grand (22), mais ancrez vos actions dans le concret (4).", 33: "<strong>Compassion & Guérison (33/6) :</strong> Journée de service et d'amour universel (33). Une énergie de jour 6 amplifiée. Soyez une source d'inspiration et de réconfort pour les autres." },
                 compatibility: {
                     relations: { '1': { harmony: [1, 3, 5], challenge: [6, 8], neutral: [2, 4, 7, 9] }, '2': { harmony: [2, 4, 6, 8], challenge: [5, 7], neutral: [1, 3, 9] }, '3': { harmony: [1, 3, 5, 6, 9], challenge: [], neutral: [2, 4, 7, 8] }, '4': { harmony: [2, 4, 6, 8], challenge: [5, 7], neutral: [1, 3, 9] }, '5': { harmony: [1, 3, 5], challenge: [2, 4], neutral: [6, 7, 8, 9] }, '6': { harmony: [2, 3, 4, 6, 9], challenge: [1, 8], neutral: [5, 7] }, '7': { harmony: [7, 9], challenge: [2, 4, 8], neutral: [1, 3, 5, 6] }, '8': { harmony: [2, 4, 6, 8], challenge: [1, 7], neutral: [3, 5, 9] }, '9': { harmony: [3, 6, 9], challenge: [], neutral: [1, 2, 4, 5, 7, 8] }, },
-                    summary: { harmony: "Dynamique très favorable, marquée par une compréhension et un soutien mutuels. Les énergies s'alignent naturellement.", challenge: "Relation de croissance. Les différences peuvent créer des frictions, mais offrent de puissantes leçons si elles sont comprises.", neutral: "Compatibilité équilibrée. La relation dépendra de la volonté des deux partenaires de s'adapter et de communiquer." }
+                    summary: { harmony: "Dynamique très favorable, marquée par une compréhension et un soutien mutuels. Les énergies s'alignent naturally.", challenge: "Relation de croissance. Les différences peuvent créer des frictions, mais offrent de puissantes leçons si elles sont comprises.", neutral: "Compatibilité équilibrée. La relation dépendra de la volonté des deux partenaires de s'adapter et de communiquer." }
                 }
             };
 
             const calculator = {
-                reduceNumber(n) {
+                reduceNumber(n, keepMasters = true) {
                     let num = parseInt(n, 10);
                     if (isNaN(num)) return 0;
-                    while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
+                    while (num > 9 && (!keepMasters || !data.masterNumbers.includes(num))) {
                         num = String(num).split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
                     }
                     return num;
@@ -175,10 +199,14 @@
                 calculateComplexNumber(sum) {
                     const karmicDebt = Object.keys(data.karmicDebtsMap).map(Number).includes(sum) ? sum : null;
                     const finalValue = this.reduceNumber(sum);
-                    return { value: finalValue, karmicDebt, initialSum: sum };
+                    let baseValue = null;
+                    if(data.masterNumbers.includes(finalValue)) {
+                        baseValue = this.reduceNumber(finalValue, false);
+                    }
+                    return { value: finalValue, karmicDebt, initialSum: sum, baseValue };
                 },
                 calculateNameNumber(name, type) {
-                    if (!name) return { value: 0, initialSum: 0, karmicDebt: null, details: "Aucun nom fourni" };
+                    if (!name) return { value: 0, initialSum: 0, karmicDebt: null, baseValue: null, details: "Aucun nom fourni" };
                     const normalizedName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/[^A-Z\s]/g, '');
                     let sum = 0;
                     let details = [];
@@ -191,24 +219,24 @@
                             details.push(`${char}(${value})`);
                         }
                     }
-                    if (details.length === 0) return { value: 0, initialSum: 0, karmicDebt: null, details: "Aucune lettre valide trouvée." };
+                    if (details.length === 0) return { value: 0, initialSum: 0, karmicDebt: null, baseValue: null, details: "Aucune lettre valide trouvée." };
                     const result = this.calculateComplexNumber(sum);
                     result.details = `${details.join(' + ')} = ${result.initialSum}${result.karmicDebt ? ` (Dette ${result.karmicDebt})` : ''} ➔ ${result.value}`;
                     return result;
                 },
                 calculateLifePath(date) {
                     const [year, month, day] = date.split('-');
-                    const sum = this.reduceNumber(day) + this.reduceNumber(month) + this.reduceNumber(year);
+                    const sum = this.reduceNumber(day, false) + this.reduceNumber(month, false) + this.reduceNumber(year, false);
                     const result = this.calculateComplexNumber(sum);
-                    result.details = `Jour(${this.reduceNumber(day)}) + Mois(${this.reduceNumber(month)}) + Année(${this.reduceNumber(year)}) = ${result.initialSum} ➔ ${result.value}`;
+                    result.details = `Jour(${this.reduceNumber(day, false)}) + Mois(${this.reduceNumber(month, false)}) + Année(${this.reduceNumber(year, false)}) = ${result.initialSum} ➔ ${result.value}`;
                     return result;
                 },
                 calculateDailyVibration(birthDate) {
-                    if (!birthDate) return 0;
+                    if (!birthDate) return { value: 0, baseValue: null };
                     const today = new Date();
                     const [year, month, day] = birthDate.split('-').map(Number);
-                    const sum = this.reduceNumber(day) + this.reduceNumber(month) + this.reduceNumber(today.getDate()) + this.reduceNumber(today.getMonth() + 1) + this.reduceNumber(today.getFullYear());
-                    return this.reduceNumber(sum);
+                    const sum = this.reduceNumber(day, false) + this.reduceNumber(month, false) + this.reduceNumber(today.getDate(), false) + this.reduceNumber(today.getMonth() + 1, false) + this.reduceNumber(today.getFullYear(), false);
+                    return this.calculateComplexNumber(sum);
                 },
                 calculateEnergyPresence(fullName) {
                     const presence = { 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0 };
@@ -222,13 +250,13 @@
                 },
                 calculateLifeCycles(birthDate, lifePathValue) {
                     const [year, month, day] = birthDate.split('-').map(Number);
-                    const dayR = this.reduceNumber(day), monthR = this.reduceNumber(month), yearR = this.reduceNumber(year);
-                    const age1 = 36 - lifePathValue;
+                    const dayR = this.reduceNumber(day, false), monthR = this.reduceNumber(month, false), yearR = this.reduceNumber(year, false);
+                    const age1 = 36 - this.reduceNumber(lifePathValue, false);
                     return [
-                        { age: `0 à ${age1} ans`, pinnacle: this.reduceNumber(monthR + dayR), challenge: this.reduceNumber(Math.abs(monthR - dayR)) },
-                        { age: `${age1 + 1} à ${age1 + 9} ans`, pinnacle: this.reduceNumber(dayR + yearR), challenge: this.reduceNumber(Math.abs(dayR - yearR)) },
-                        { age: `${age1 + 10} à ${age1 + 18} ans`, pinnacle: this.reduceNumber(this.reduceNumber(monthR + dayR) + this.reduceNumber(dayR + yearR)), challenge: this.reduceNumber(Math.abs(this.reduceNumber(Math.abs(monthR - dayR)) - this.reduceNumber(Math.abs(dayR - yearR)))) },
-                        { age: `Après ${age1 + 18} ans`, pinnacle: this.reduceNumber(monthR + yearR), challenge: this.reduceNumber(Math.abs(monthR - yearR)) }
+                        { age: `0 à ${age1} ans`, pinnacle: this.reduceNumber(monthR + dayR, false), challenge: this.reduceNumber(Math.abs(monthR - dayR), false) },
+                        { age: `${age1 + 1} à ${age1 + 9} ans`, pinnacle: this.reduceNumber(dayR + yearR, false), challenge: this.reduceNumber(Math.abs(dayR - yearR), false) },
+                        { age: `${age1 + 10} à ${age1 + 18} ans`, pinnacle: this.reduceNumber(this.reduceNumber(monthR + dayR, false) + this.reduceNumber(dayR + yearR, false), false), challenge: this.reduceNumber(Math.abs(this.reduceNumber(Math.abs(monthR - dayR), false) - this.reduceNumber(Math.abs(dayR - yearR), false)), false) },
+                        { age: `Après ${age1 + 18} ans`, pinnacle: this.reduceNumber(monthR + yearR, false), challenge: this.reduceNumber(Math.abs(monthR - yearR), false) }
                     ];
                 },
                 getTheme(fullName, birthDate) {
@@ -262,17 +290,12 @@
                     compatForm: document.getElementById('compatibility-form'), p1Name: document.getElementById('p1-full-name'), p1Date: document.getElementById('p1-birth-date'),
                     p2Name: document.getElementById('p2-full-name'), p2Date: document.getElementById('p2-birth-date'), compatResultsContainer: document.getElementById('compatibility-results'),
                     glossaryModal: document.getElementById('glossary-modal'), modalCloseBtn: document.getElementById('modal-close-btn'), modalBody: document.getElementById('modal-body'),
+                    methodologyModal: document.getElementById('methodology-modal'), methodologyCloseBtn: document.getElementById('methodology-close-btn'), methodologyModalBody: document.getElementById('methodology-modal-body'), methodologyLink: document.getElementById('methodology-link'),
                 },
 
                 init() {
-                    this.elements.themeToggle.addEventListener('change', () => {
-                        document.body.classList.toggle('dark-mode');
-                        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-                    });
-                    if (localStorage.getItem('theme') === 'dark') {
-                        document.body.classList.add('dark-mode');
-                        this.elements.themeToggle.checked = true;
-                    }
+                    this.elements.themeToggle.addEventListener('change', () => { document.body.classList.toggle('dark-mode'); localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); });
+                    if (localStorage.getItem('theme') === 'dark') { document.body.classList.add('dark-mode'); this.elements.themeToggle.checked = true; }
                     
                     this.elements.navTheme.addEventListener('click', () => this.toggleView('theme'));
                     this.elements.navCompatibility.addEventListener('click', () => this.toggleView('compatibility'));
@@ -280,9 +303,7 @@
                     this.elements.form.addEventListener('submit', e => { e.preventDefault(); this.handleThemeSubmit(); });
                     this.elements.compatForm.addEventListener('submit', e => { e.preventDefault(); this.handleCompatibilitySubmit(e); });
                     
-                    [this.elements.dateInput, this.elements.p1Date, this.elements.p2Date].forEach(input => {
-                        input.addEventListener('input', this.formatDateInput);
-                    });
+                    [this.elements.dateInput, this.elements.p1Date, this.elements.p2Date].forEach(input => { input.addEventListener('input', this.formatDateInput); });
                     
                     const savedUser = JSON.parse(localStorage.getItem('numerologyUser'));
                     if (savedUser && savedUser.name && savedUser.date) {
@@ -296,34 +317,38 @@
                     }
 
                     this.elements.modalCloseBtn.onclick = () => this.elements.glossaryModal.style.display = "none";
-                    window.onclick = (event) => { if (event.target == this.elements.glossaryModal) this.elements.glossaryModal.style.display = "none"; };
+                    this.elements.methodologyCloseBtn.onclick = () => this.elements.methodologyModal.style.display = "none";
+                    this.elements.methodologyLink.onclick = () => this.openMethodologyModal();
+                    
+                    window.onclick = (event) => {
+                        if (event.target == this.elements.glossaryModal) this.elements.glossaryModal.style.display = "none";
+                        if (event.target == this.elements.methodologyModal) this.elements.methodologyModal.style.display = "none";
+                    };
+                },
+                
+                formatNumberForDisplay(result) {
+                    if (result && result.baseValue) { return `${result.value}/${result.baseValue}`; }
+                    return result ? result.value : '';
+                },
+
+                generateCircleHTML(result) {
+                    if (result && result.baseValue) {
+                        return `<span class="master-part">${result.value}</span><hr class="separator"><span class="base-part">${result.baseValue}</span>`;
+                    }
+                    return result ? result.value : '';
                 },
 
                 parseAndValidateDate(dateString) {
-                    const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-                    if (!regex.test(dateString)) return null;
+                    const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/; if (!regex.test(dateString)) return null;
                     const [, day, month, year] = dateString.match(regex);
                     const date = new Date(`${year}-${month}-${day}T00:00:00`);
-                    if (date.getFullYear() != year || (date.getMonth() + 1) != month || date.getDate() != day) {
-                        return null;
-                    }
+                    if (date.getFullYear() != year || (date.getMonth() + 1) != month || date.getDate() != day) return null;
                     return `${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
                 },
 
-                formatDateForDisplay(dateString) {
-                    if (!dateString) return '';
-                    const [year, month, day] = dateString.split('-');
-                    return `${day}/${month}/${year}`;
-                },
+                formatDateForDisplay(dateString) { if (!dateString) return ''; const [year, month, day] = dateString.split('-'); return `${day}/${month}/${year}`; },
+                formatDateInput(e) { let input = e.target; let value = input.value.replace(/\D/g, ''); if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2); if (value.length > 5) value = value.slice(0, 5) + '/' + value.slice(5, 9); input.value = value; },
                 
-                formatDateInput(e) {
-                    let input = e.target;
-                    let value = input.value.replace(/\D/g, '');
-                    if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
-                    if (value.length > 5) value = value.slice(0, 5) + '/' + value.slice(5, 9);
-                    input.value = value;
-                },
-
                 toggleView(view) {
                     const isTheme = view === 'theme';
                     this.elements.themeContent.classList.toggle('active', isTheme);
@@ -333,58 +358,42 @@
                 },
 
                 handleThemeSubmit() {
-                    const fullName = this.elements.nameInput.value;
-                    const birthDate = this.parseAndValidateDate(this.elements.dateInput.value);
-                    if (!fullName || !birthDate) {
-                        alert("Veuillez remplir tous les champs, avec une date valide au format JJ/MM/AAAA.");
-                        return;
-                    }
+                    const fullName = this.elements.nameInput.value; const birthDate = this.parseAndValidateDate(this.elements.dateInput.value);
+                    if (!fullName || !birthDate) { alert("Veuillez remplir tous les champs, avec une date valide au format JJ/MM/AAAA."); return; }
                     localStorage.setItem('numerologyUser', JSON.stringify({ name: fullName, date: birthDate }));
                     this.displayThemeResults(fullName, birthDate, false);
-                    this.elements.p1Name.value = fullName;
-                    this.elements.p1Date.value = this.formatDateForDisplay(birthDate);
+                    this.elements.p1Name.value = fullName; this.elements.p1Date.value = this.formatDateForDisplay(birthDate);
                 },
                 
                 handleCompatibilitySubmit(e){
-                    const p1Name = this.elements.p1Name.value;
-                    const p1Date = this.parseAndValidateDate(this.elements.p1Date.value);
-                    const p2Name = this.elements.p2Name.value;
-                    const p2Date = this.parseAndValidateDate(this.elements.p2Date.value);
-                    if(!p1Name || !p1Date || !p2Name || !p2Date) {
-                        alert("Veuillez remplir les informations des deux personnes, avec des dates valides au format JJ/MM/AAAA.");
-                        return;
-                    }
-                    const p1Theme = calculator.getTheme(p1Name, p1Date);
-                    const p2Theme = calculator.getTheme(p2Name, p2Date);
-                    this.displayCompatibilityResults(p1Theme, p2Theme);
-                    e.target.querySelector('button').scrollIntoView({ behavior: 'smooth', block: 'end' });
+                    const p1Name = this.elements.p1Name.value; const p1Date = this.parseAndValidateDate(this.elements.p1Date.value);
+                    const p2Name = this.elements.p2Name.value; const p2Date = this.parseAndValidateDate(this.elements.p2Date.value);
+                    if(!p1Name || !p1Date || !p2Name || !p2Date) { alert("Veuillez remplir les informations des deux personnes, avec des dates valides au format JJ/MM/AAAA."); return; }
+                    const p1Theme = calculator.getTheme(p1Name, p1Date); const p2Theme = calculator.getTheme(p2Name, p2Date);
+                    this.displayCompatibilityResults(p1Theme, p2Theme); e.target.querySelector('button').scrollIntoView({ behavior: 'smooth', block: 'end' });
                 },
 
                 displayThemeResults(fullName, birthDate, isReload) {
                     const theme = calculator.getTheme(fullName, birthDate);
                     const mainResults = new Map([
-                        ['Chemin de Vie', { key: 'cheminDeVie', result: theme.lifePath, description: "Votre mission de vie, les leçons à apprendre." }],
-                        ['Nombre d\'Expression', { key: 'expression', result: theme.expression, description: "Vos talents innés, vos potentiels." }],
-                        ['Nombre de l\'Âme', { key: 'ame', result: theme.soul, description: "Ce qui vous motive profondément." }],
-                        ['Nombre de Personnalité', { key: 'personnalite', result: theme.personality, description: "L'image que vous projetez, votre 'masque' social." }],
+                        ['Chemin de Vie', { key: 'cheminDeVie', result: theme.lifePath, description: "Votre mission de vie, les grandes leçons à apprendre et le potentiel à réaliser." }],
+                        ['Nombre d\'Expression', { key: 'expression', result: theme.expression, description: "Vos talents et potentiels innés. Ce sont vos outils pour naviguer la vie." }],
+                        ['Nombre de l\'Âme', { key: 'ame', result: theme.soul, description: "Vos désirs profonds, ce qui vous motive et vous anime de l'intérieur." }],
+                        ['Nombre de Personnalité', { key: 'personnalite', result: theme.personality, description: "L'image que vous projetez, la première impression que les autres ont de vous." }],
                         ['Nombre Actif', { key: 'nombreActif', result: theme.active, description: "Votre énergie d'action, la façon dont vous initiez les choses." }]
                     ]);
                     
                     this.displayDailyVibration(theme.dailyVibration);
-                    this.displaySummary(theme.lifePath.value, theme.expression.value);
+                    this.displaySummary(theme.lifePath, theme.expression);
                     this.displayEnergyChart(theme.energyPresence);
                     this.displayLifeCycles(theme.lifeCycles);
 
                     this.elements.resultsContainer.innerHTML = '';
-                    mainResults.forEach((resultData, title) => {
-                        this.elements.resultsContainer.appendChild(this.createResultCard(title, resultData));
-                    });
+                    mainResults.forEach((resultData, title) => { this.elements.resultsContainer.appendChild(this.createResultCard(title, resultData)); });
                     
                     this.elements.resultsWrapper.classList.remove('hidden');
                     this.animateCards('#theme-content .card');
-                    if (!isReload) {
-                        setTimeout(() => this.elements.resultsWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
-                    }
+                    if (!isReload) { setTimeout(() => this.elements.resultsWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200); }
                     this.setupActionButtons(theme, mainResults);
                 },
                 
@@ -392,30 +401,39 @@
                     const interpretationText = data.interpretations[resultData.key]?.[resultData.result.value] || "Interprétation non disponible.";
                     const card = document.createElement('div');
                     card.className = 'card result-card';
+                    const circleHTML = this.generateCircleHTML(resultData.result);
                     let karmicHTML = '';
                     if(resultData.result.karmicDebt) {
-                        karmicHTML = `<div class="karmic-warning">⚠️ <strong>Défi Karmique ${resultData.result.karmicDebt} :</strong> Ce nombre indique un défi particulier lié à ${data.karmicDebtsMap[resultData.result.karmicDebt]}.</div>`;
+                        karmicHTML = `<div class="karmic-warning">⚠️ <strong>Défi Karmique ${resultData.result.karmicDebt} :</strong> Ce nombre indique un défi spécifique, un 'frein' à transformer en force, lié à ${data.karmicDebtsMap[resultData.result.karmicDebt]}.</div>`;
                     }
-                    card.innerHTML = `<h2><span class="number-circle" data-number="${resultData.result.value}">${resultData.result.value}</span>${title}</h2><p class="description">${resultData.description}</p><p>${interpretationText}</p>${karmicHTML}<details><summary>Voir le calcul</summary><div class="calculation-details" style="font-size:0.9em; opacity:0.8; padding-top:10px;">${resultData.result.details}</div></details>`;
-                    card.querySelector('.number-circle').addEventListener('click', (e) => this.openGlossaryModal(e.target.dataset.number));
+                    let methodologyNoteHTML = '';
+                    if(title === 'Nombre de l\'Âme') {
+                        methodologyNoteHTML = `<p class="methodology-note">ℹ️ Calculé avec les voyelles du nom complet (A, E, I, O, U, Y). Voir "Notre Méthodologie" en bas de page pour plus de détails.</p>`;
+                    }
+                    card.innerHTML = `<h2><span class="number-circle" data-number="${resultData.result.value}">${circleHTML}</span>${title}</h2><p class="description">${resultData.description}</p><p>${interpretationText}</p>${karmicHTML}<details><summary>Voir le calcul</summary><div class="calculation-details" style="font-size:0.9em; opacity:0.8; padding-top:10px;">${resultData.result.details}</div></details>${methodologyNoteHTML}`;
+                    card.querySelector('.number-circle').addEventListener('click', (e) => this.openGlossaryModal(e.currentTarget.dataset.number));
                     return card;
                 },
 
-                displayDailyVibration(number) {
-                    this.elements.dailyVibrationContainer.innerHTML = `<div class="card daily-vibration-card"><h2 class="fade-in"><span class="number-circle" data-number="${number}">${number}</span>Votre Vibration du Jour</h2><p class="description fade-in">${data.dailyVibration[number] || "Journée d'énergie intense et de potentiel élevé."}</p></div>`;
-                    this.elements.dailyVibrationContainer.querySelector('.number-circle').addEventListener('click', (e) => this.openGlossaryModal(e.target.dataset.number));
+                displayDailyVibration(vibration) {
+                    const circleHTML = this.generateCircleHTML(vibration);
+                    this.elements.dailyVibrationContainer.innerHTML = `<div class="card daily-vibration-card"><h2 class="fade-in"><span class="number-circle" data-number="${vibration.value}">${circleHTML}</span>Votre Vibration du Jour</h2><p class="description fade-in">${data.dailyVibration[vibration.value] || "Journée d'énergie intense et de potentiel élevé."}</p></div>`;
+                    this.elements.dailyVibrationContainer.querySelector('.number-circle').addEventListener('click', (e) => this.openGlossaryModal(e.currentTarget.dataset.number));
                 },
                 
-                displaySummary(lp, exp) {
-                    const lpText = data.interpretations.cheminDeVie[lp]?.match(/<strong>(.*?) :<\/strong>/)[1] || "inconnu";
-                    const expText = data.interpretations.expression[exp]?.match(/<strong>(.*?) :<\/strong>/)[1] || "inconnu";
-                    let summaryText = `Votre <strong>Chemin de Vie ${lp}</strong> (votre mission) vous invite à devenir <strong>${lpText}</strong>. Pour y parvenir, vous disposez des dons de votre <strong>Nombre d'Expression ${exp}</strong> (vos outils), qui vous définit comme <strong>${expText}</strong>.`;
-                    if (lp === exp || (lp === 11 && exp === 2) || (lp === 22 && exp === 4) || (lp === 33 && exp === 6)) {
-                        summaryText += "<br><br>✨ <strong>Synergie Puissante :</strong> Votre mission et vos talents sont en parfaite harmonie, ce qui vous donne une grande force et une clarté d'objectif.";
+                displaySummary(lifePath, expression) {
+                    const lpDisplay = this.formatNumberForDisplay(lifePath);
+                    const expDisplay = this.formatNumberForDisplay(expression);
+                    const lpText = data.interpretations.cheminDeVie[lifePath.value]?.match(/<strong>(.*?) :<\/strong>/)[1] || "inconnu";
+                    const expText = data.interpretations.expression[expression.value]?.match(/<strong>(.*?) :<\/strong>/)[1] || "inconnu";
+                    let summaryText = `La clé de votre épanouissement réside dans la relation entre votre <strong>mission de vie (Chemin de Vie ${lpDisplay})</strong> et vos <strong>outils innés (Nombre d'Expression ${expDisplay})</strong>.<br><br>Votre mission est de devenir <strong>${lpText}</strong>. Pour y parvenir, vous disposez naturellement des talents d'un(e) <strong>${expText}</strong>. L'art consiste à utiliser consciemment vos outils pour avancer sur votre chemin.`;
+                    
+                    if (lifePath.value === expression.value || (lifePath.baseValue && lifePath.baseValue === expression.value)) {
+                        summaryText += "<br><br>✨ <strong>Synergie Puissante :</strong> Votre mission et vos talents sont en alignement parfait. Cela vous donne une grande force et une clarté d'objectif, mais attention à ne pas rester dans votre zone de confort.";
                     } else {
-                        summaryText += "<br><br>💡 <strong>Dynamique de Croissance :</strong> Vos talents et votre mission sont différents, créant une dynamique unique qui vous pousse à développer de nouvelles facettes de votre personnalité.";
+                        summaryText += "<br><br>💡 <strong>Dynamique de Croissance :</strong> Vos outils et votre mission sont différents. Cette tension est votre plus grande force : elle vous pousse à développer de nouvelles facettes de votre personnalité pour atteindre votre plein potentiel.";
                     }
-                    this.elements.summaryContainer.innerHTML = `<div class="card summary-card" style="border-left-color: var(--summary-border);"><h2>Synthèse Stratégique</h2><p>${summaryText}</p></div>`;
+                    this.elements.summaryContainer.innerHTML = `<div class="card summary-card" style="border-left-color: var(--summary-border);"><h2>✨ Votre Duo Stratégique</h2><p>${summaryText}</p></div>`;
                 },
 
                 displayEnergyChart(presenceData) {
@@ -430,10 +448,10 @@
                         const barHeight = (count / maxPresence) * (chartHeight - 30);
                         const x = index * (barWidth + barMargin);
                         const y = chartHeight - barHeight - 20;
-                        svgContent += `<g transform="translate(${x}, 0)"><rect x="0" y="${y}" width="${barWidth}" height="${barHeight}" fill="var(--secondary-color)" rx="3"><title>${data.energyKeywords[num]} (x${count})</title></rect><text x="${barWidth / 2}" y="${chartHeight - 5}" font-family="Poppins" font-size="12" fill="var(--text-color)" text-anchor="middle">${num}</text></g>`;
+                        svgContent += `<g transform="translate(${x}, 0)"><rect x="0" y="${y}" width="${barWidth}" height="${barHeight}" fill="var(--secondary-color)" rx="3"><title>${data.energyKeywords[num]} (présent ${count} fois)</title></rect><text x="${barWidth / 2}" y="${chartHeight - 5}" font-family="Poppins" font-size="12" fill="var(--text-color)" text-anchor="middle">${num}</text></g>`;
                     });
                     svgContent += `</svg>`;
-                    container.innerHTML = `<div class="card chart-card"><h2 style="font-size: 1.5em;">📊 Présence Énergétique du Nom</h2><p class="description">Ce graphique montre les énergies innées dans votre nom. Une barre haute indique un talent naturel, une barre basse une énergie à développer consciemment.</p><div class="energy-chart-svg-container">${svgContent}</div>${analysis}</div>`;
+                    container.innerHTML = `<div class="card chart-card"><h2 style="font-size: 1.5em;">📊 Vos Énergies Innées (dans le nom)</h2><p class="description">Ce graphique révèle vos forces naturelles (barres hautes) et vos axes de développement (barres basses ou absentes).</p><div class="energy-chart-svg-container">${svgContent}</div>${analysis}</div>`;
                 },
 
                 generateEnergyAnalysis(presenceData) {
@@ -441,26 +459,25 @@
                     if (maxCount === 0) return "";
                     const maxEnergies = Object.keys(presenceData).filter(k => presenceData[k] === maxCount).map(Number);
                     const lackingEnergies = Object.keys(presenceData).filter(k => presenceData[k] === 0).map(Number);
-                    let analysisHTML = '<div class="energy-analysis"><p><strong>Analyse de vos énergies :</strong> ';
-                    analysisHTML += `Vos énergies dominantes sont le <strong>${maxEnergies.map(n => `${n} (${data.energyKeywords[n]})`).join(' et le ')}</strong>. Cela indique des talents naturels très marqués dans ces domaines. `;
+                    let analysisHTML = '<div class="energy-analysis"><p><strong>Analyse de votre potentiel :</strong> ';
+                    analysisHTML += `Vos énergies dominantes sont le <strong>${maxEnergies.map(n => `${n} (${data.energyKeywords[n]})`).join(' et le ')}</strong>. Ce sont vos talents les plus évidents, des forces sur lesquelles vous pouvez vous appuyer. `;
                     if (lackingEnergies.length > 0) {
-                        analysisHTML += `À l'inverse, les énergies <strong>${lackingEnergies.map(n => `${n} (${data.energyKeywords[n]})`).join(', ')}</strong> sont absentes. Ce sont des domaines que vous pourriez avoir besoin de développer pour atteindre un meilleur équilibre.`;
+                        analysisHTML += `À l'inverse, les énergies <strong>${lackingEnergies.map(n => `${n} (${data.energyKeywords[n]})`).join(', ')}</strong> sont vos <strong>axes de croissance</strong>. Intégrer consciemment ces qualités dans votre vie vous aidera à surmonter certains blocages et à trouver un meilleur équilibre.`;
                     }
                     analysisHTML += '</p></div>';
                     return analysisHTML;
                 },
 
                 displayLifeCycles(cyclesData) {
-                    let cyclesHTML = `<div class="card cycles-card"><h2 style="font-size: 1.5em;">🧭 Vos 4 Cycles de Vie</h2><div class="life-cycles-grid">`;
-                    cyclesData.forEach(cycle => { cyclesHTML += `<div class="cycle-card"><h3>${cycle.age}</h3><p><strong>Pinacle ${cycle.pinnacle}:</strong> Opportunités et ambiance.</p><p><strong>Défi ${cycle.challenge}:</strong> Leçon à intégrer.</p></div>`; });
+                    let cyclesHTML = `<div class="card cycles-card"><h2 style="font-size: 1.5em;">🧭 Vos 4 Cycles de Vie</h2><p class="description">Votre vie se divise en grands cycles, chacun avec une ambiance (Pinacle) et une leçon à intégrer (Défi).</p><div class="life-cycles-grid">`;
+                    cyclesData.forEach(cycle => { cyclesHTML += `<div class="cycle-card"><h3>${cycle.age}</h3><p><strong>Pinacle ${cycle.pinnacle}:</strong> Opportunités et climat.</p><p><strong>Défi ${cycle.challenge}:</strong> Leçon à maîtriser.</p></div>`; });
                     cyclesHTML += `</div></div>`;
                     this.elements.cyclesContainer.innerHTML = cyclesHTML;
                 },
                 
                 getCompatibility(n1, n2) {
-                    const masterNumbers = [11, 22, 33];
-                    let r1 = masterNumbers.includes(n1) ? calculator.reduceNumber(n1) : n1;
-                    let r2 = masterNumbers.includes(n2) ? calculator.reduceNumber(n2) : n2;
+                    const r1 = calculator.reduceNumber(n1, false);
+                    const r2 = calculator.reduceNumber(n2, false);
                     const rel = data.compatibility.relations[r1];
                     if (!rel) return 'neutral';
                     if (rel.harmony.includes(r2)) return 'harmony';
@@ -472,16 +489,18 @@
                     const container = this.elements.compatResultsContainer;
                     container.innerHTML = '';
                     const aspects = [
-                        { title: 'Chemins de Vie', val1: p1.lifePath.value, val2: p2.lifePath.value, desc: "La mission de vie, la leçon principale." },
-                        { title: 'Nombres d\'Expression', val1: p1.expression.value, val2: p2.expression.value, desc: "Les talents, le mode de fonctionnement." },
-                        { title: 'Nombres d\'Âme', val1: p1.soul.value, val2: p2.soul.value, desc: "Les désirs profonds, les motivations intimes." }
+                        { title: 'Chemins de Vie (Missions)', res1: p1.lifePath, res2: p2.lifePath, desc: "La mission de vie, la leçon principale." },
+                        { title: 'Nombres d\'Expression (Outils)', res1: p1.expression, res2: p2.expression, desc: "Les talents, le mode de fonctionnement." },
+                        { title: 'Nombres d\'Âme (Désirs)', res1: p1.soul, res2: p2.soul, desc: "Les désirs profonds, les motivations intimes." }
                     ];
                     aspects.forEach(aspect => {
-                        const type = this.getCompatibility(aspect.val1, aspect.val2);
+                        const type = this.getCompatibility(aspect.res1.value, aspect.res2.value);
                         const typeText = { harmony: 'Harmonie', challenge: 'Défi', neutral: 'Neutre' }[type];
                         const card = document.createElement('div');
                         card.className = `card ${type}`;
-                        card.innerHTML = `<h2 style="color: var(--${type}-color);">${typeText} - ${aspect.title}</h2><p><strong>${p1.firstName} (${aspect.val1}) & ${p2.firstName} (${aspect.val2})</strong></p><p><em>${aspect.desc}</em></p><p>${data.compatibility.summary[type]}</p>`;
+                        const p1Display = this.formatNumberForDisplay(aspect.res1);
+                        const p2Display = this.formatNumberForDisplay(aspect.res2);
+                        card.innerHTML = `<h2 style="color: var(--${type}-color);">${typeText} - ${aspect.title}</h2><p><strong>${p1.firstName} (${p1Display}) & ${p2.firstName} (${p2Display})</strong></p><p><em>${aspect.desc}</em></p><p>${data.compatibility.summary[type]}</p>`;
                         container.appendChild(card);
                     });
                     container.classList.remove('hidden');
@@ -501,30 +520,31 @@
                     this.elements.glossaryModal.style.display = "block";
                 },
 
+                openMethodologyModal() {
+                    const { title, content } = data.methodologyText;
+                    this.elements.methodologyModalBody.innerHTML = `<h2>${title}</h2>${content}`;
+                    this.elements.methodologyModal.style.display = "block";
+                },
+
                 drawProfileCard(theme) {
                     this.elements.profileCardContainer.classList.remove('hidden');
-                    const canvas = this.elements.profileCardCanvas;
-                    const ctx = canvas.getContext('2d');
+                    const canvas = this.elements.profileCardCanvas; const ctx = canvas.getContext('2d');
                     const isDark = document.body.classList.contains('dark-mode');
                     canvas.width = 500; canvas.height = 500;
                     const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
                     gradient.addColorStop(0, isDark ? '#2c3e50' : '#4361ee');
                     gradient.addColorStop(1, isDark ? '#1e1e1e' : '#7209b7');
-                    ctx.fillStyle = gradient;
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = 'white';
-                    ctx.font = 'bold 32px Lora';
-                    ctx.textAlign = 'center';
+                    ctx.fillStyle = gradient; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'white'; ctx.font = 'bold 32px Lora'; ctx.textAlign = 'center';
                     ctx.fillText(theme.firstName, canvas.width / 2, 80);
-                    const numbers = [ { label: "Chemin de Vie", value: theme.lifePath.value }, { label: "Expression", value: theme.expression.value }, { label: "Âme", value: theme.soul.value }, { label: "Personnalité", value: theme.personality.value } ];
+                    const numbers = [ { label: "Chemin de Vie", result: theme.lifePath }, { label: "Expression", result: theme.expression }, { label: "Âme", result: theme.soul }, { label: "Personnalité", result: theme.personality } ];
                     ctx.font = '22px Poppins';
                     numbers.forEach((num, index) => {
                         const y = 160 + index * 80;
-                        ctx.textAlign = 'left';
-                        ctx.fillText(`${num.label} :`, 100, y);
-                        ctx.textAlign = 'right';
-                        ctx.font = 'bold 42px Lora';
-                        ctx.fillText(num.value, 400, y + 10);
+                        const displayNumber = this.formatNumberForDisplay(num.result);
+                        ctx.textAlign = 'left'; ctx.fillText(`${num.label} :`, 100, y);
+                        ctx.textAlign = 'right'; ctx.font = 'bold 38px Lora';
+                        ctx.fillText(displayNumber, 400, y + 10);
                         ctx.font = '22px Poppins';
                     });
                     this.elements.profileCardContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -532,8 +552,7 @@
 
                 animateCards(selector) {
                     document.querySelectorAll(selector).forEach((card, index) => {
-                        card.classList.remove('fade-in');
-                        void card.offsetWidth;
+                        card.classList.remove('fade-in'); void card.offsetWidth;
                         card.style.animationDelay = `${index * 0.07}s`;
                         card.classList.add('fade-in');
                     });
@@ -542,20 +561,33 @@
                 setupActionButtons(theme, resultsMap) {
                     this.elements.printBtn.onclick = () => window.print();
                     this.elements.profileCardBtn.onclick = () => this.drawProfileCard(theme);
+
+                    this.elements.aiExportBtn.innerHTML = '✨ Révéler mon Analyse Stratégique Complète';
+                    let existingDesc = this.elements.aiExportBtn.nextElementSibling;
+                    if(existingDesc && existingDesc.classList.contains('ai-prompt-description')) {
+                        existingDesc.remove();
+                    }
+                    const aiDesc = document.createElement('p');
+                    aiDesc.className = 'ai-prompt-description';
+                    aiDesc.innerHTML = "Copie un prompt optimisé à coller dans une IA (ChatGPT, Gemini, etc.) pour une analyse qui tisse des liens entre tous vos nombres.";
+                    this.elements.aiExportBtn.insertAdjacentElement('afterend', aiDesc);
+                    
                     this.elements.aiExportBtn.onclick = () => {
                         let resultsForAI = '';
-                        resultsMap.forEach((data, title) => { resultsForAI += `${title}: ${data.result.value}${data.result.karmicDebt ? ` (Dette Karmique ${data.result.karmicDebt})` : ''}\n`; });
-                        const aiPrompt = `# CONTEXTE\nAgis comme un expert en numérologie stratégique. Analyse le thème suivant.\n\n# THÈME NUMÉROLOGIQUE\n${resultsForAI.trim()}\n\n# CYCLES DE VIE\n${JSON.stringify(theme.lifeCycles, null, 2)}\n\n# ÉNERGIES DU NOM (Présence des nombres de 1 à 9)\n${JSON.stringify(theme.energyPresence, null, 2)}\n\n# TA MISSION\nEn te basant sur TOUTES ces données, rédige une analyse complète et bienveillante. Ta valeur est de TISSER DES LIENS entre les nombres pour révéler les synergies et les défis.\n\nStructure ta réponse ainsi :\n1. **Synthèse Stratégique :** Le grand paradoxe ou la mission unique de cette personne. Comment son Expression (outils) sert son Chemin de Vie (mission) ?\n2. **Forces Principales (Synergies) :** Identifie 2-3 associations de nombres qui fonctionnent bien ensemble (ex: Âme et Personnalité). Explique pourquoi.\n3. **Axes de Croissance (Défis) :** Analyse les tensions (ex: Expression vs Chemin de Vie), les dettes karmiques et les énergies manquantes du nom. Donne un conseil pour chaque point.\n4. **Feuille de Route Actuelle :** En te basant sur le cycle de vie actuel, quel est le principal conseil pour la période que la personne traverse ? (Considérer que nous sommes en ${new Date().getFullYear()}).\n5. **Conseil Final :** Un résumé positif et un conseil actionnable pour que la personne puisse exploiter son plein potentiel.`;
+                        resultsMap.forEach((data, title) => {
+                            const displayNumber = this.formatNumberForDisplay(data.result);
+                            resultsForAI += `${title}: ${displayNumber}${data.result.karmicDebt ? ` (Dette Karmique ${data.result.karmicDebt})` : ''}\n`;
+                        });
+                        const aiPrompt = `# CONTEXTE\nAgis comme un expert en numérologie stratégique. Analyse le thème suivant.\n\n# THÈME NUMÉROLOGIQUE\n${resultsForAI.trim()}\n\n# CYCLES DE VIE\n${JSON.stringify(theme.lifeCycles, null, 2)}\n\n# ÉNERGIES DU NOM (Présence des nombres de 1 à 9)\n${JSON.stringify(theme.energyPresence, null, 2)}\n\n# TA MISSION\nEn te basant sur TOUTES ces données, rédige une analyse complète et bienveillante. Ta valeur est de TISSER DES LIENS entre les nombres pour révéler les synergies, les défis et le potentiel global. Prends en compte la vibration complète des maîtres nombres (ex: la dualité travail/vision du 22/4).\n\nStructure ta réponse ainsi :\n1. **Synthèse Stratégique (Le Duo Clé) :** Explique la dynamique centrale entre le Chemin de Vie (la mission) et le Nombre d'Expression (les outils). Comment ces deux nombres interagissent-ils ? Est-ce une synergie ou un défi de croissance ?\n2. **Forces Principales & Potentiel :** Identifie 2-3 associations positives entre les différents nombres (ex: Âme et Personnalité alignées, énergies dominantes du nom qui soutiennent le Chemin de Vie). Explique comment exploiter ce potentiel.\n3. **Axes de Croissance (Défis & Freins) :** Analyse les tensions, les dettes karmiques et les énergies manquantes du nom. Donne un conseil concret pour transformer chaque défi en une opportunité de croissance.\n4. **Feuille de Route pour la Période Actuelle :** En se basant sur le cycle de vie actuel (considérer que nous sommes en ${new Date().getFullYear()}), quel est le principal conseil pour la période que la personne traverse ?\n5. **Conseil Final :** Résume le potentiel unique de cette personne en une phrase puissante et donne un conseil final actionnable.`;
                         navigator.clipboard.writeText(aiPrompt.trim()).then(() => { 
                             const originalText = this.elements.aiExportBtn.innerHTML; 
-                            this.elements.aiExportBtn.innerHTML = '✅ Copié !'; 
+                            this.elements.aiExportBtn.innerHTML = '✅ Copié dans le presse-papiers !'; 
                             this.elements.aiExportBtn.disabled = true; 
                             setTimeout(() => { this.elements.aiExportBtn.innerHTML = originalText; this.elements.aiExportBtn.disabled = false; }, 2500); 
                         });
                     };
                 }
             };
-
             ui.init();
         });
     </script>
